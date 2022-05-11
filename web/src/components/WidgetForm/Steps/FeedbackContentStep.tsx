@@ -1,7 +1,6 @@
 import { ArrowLeft } from "phosphor-react";
 import { useState } from "react";
 import { FeedbackType, feedbackTypes } from "..";
-import { CloseButton } from "../../CloseButton";
 import { ScreenshotButton } from "../ScreenshotButton";
 import { Loading } from "../../Loading";
 import { api } from "../../../../server/api"
@@ -60,7 +59,7 @@ export function FeedbackContentStep({
           />
           {feedBackTypeInfo.title}
         </span>
-        <CloseButton />
+        
       </header>
 
       <form onSubmit={handleSubmitFeedback} className="my-4 w-full">
