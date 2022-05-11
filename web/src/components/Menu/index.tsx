@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { items } from "./MenuItems";
-import { X } from "phosphor-react";
+import { X, List } from "phosphor-react";
 
 
 export function Menu() {
@@ -21,11 +21,12 @@ export function Menu() {
             <X weight="bold" color="#F4F4F4" className="w-5 h-5" />
           </button>
           :
-          <img
-            src="./src/assets/icone_menu.png"
-            className={`absolute cursor-pointer m-2 top-4 w-6 rounded-full`}
+          <button
+            className={`absolute cursor-pointer m-2 right-1 top-3`}
             onClick={() => setOpen(true)}
-          />
+          >
+            <List weight="bold" color="#F4F4F4" className="w-5 h-5" />
+          </button>
         }
 
         <ul className="pt-6 font-medium text-sm text-slate-100">
