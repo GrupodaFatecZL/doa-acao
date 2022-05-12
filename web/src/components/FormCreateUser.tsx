@@ -5,6 +5,7 @@ import { Loading } from "./Loading";
 
 
 export interface User {
+  id?: string;
   nome: string;
   celular: string;
   cpf: string;
