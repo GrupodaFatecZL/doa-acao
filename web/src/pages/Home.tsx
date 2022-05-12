@@ -15,7 +15,7 @@ export function Home() {
             className="order-none ml-1 mt-2 w-32 h-8 border-cyan-400 rounded-md flex justify-between items-center gap-1 text-sm text-[#01C0D5] font-medium hover:bg-[#01C0D5] hover:text-zinc-100 transition-colors"
           >
             <User size={22} color="#01C0D5" weight="regular" className="ml-4" />
-            <div className="mr-6"> Entrar </div>
+            <div className="mr-6 font-normal text-lg"> Entrar </div>
           </button>
         </Link>
         <img src={logoBranco} alt="logotipo-fundo-branco" className="order-last mr-1 h-15 w-15" />
@@ -39,7 +39,7 @@ export function Home() {
           </p>
         </div>
       </div>
-      <div className="w-screen mt-8 flex justify-center content-center bg-[#01C0D5]">
+      <div className="w-screen mt-8 flex justify-center content-center bg-gradient-to-r from-[#a931ce] to-[#01C0D5]">
         <img src={doacao} alt="receba" className="w-16 md:w-32 lg:w-64" />
       </div>
     </>

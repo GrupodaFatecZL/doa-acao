@@ -11,7 +11,6 @@ export interface Donation {
   categoria: string;
   descricao: string;
   fotoProduto: string;
-
   cepDoador: string;
   complementoDoador: string;
   chaveUnicaDoador: string;

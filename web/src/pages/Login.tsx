@@ -17,7 +17,7 @@ export function Login() {
       <header className="absolute right-4 md:top-3 md:right-8 flex flex-col">
         <img src={logoAzul} alt="logotipo-fundo-azul" className="mt-1"/>
       </header>
-      <div className=" bg-[#01C0D5]  text-zinc-300 flex w-screen h-screen justify-center items-center content-center">
+      <div className="bg-[#01C0D5]  text-zinc-300 flex w-screen h-screen justify-center items-center content-center">
         <LoginComponent />
       </div>
     </>
