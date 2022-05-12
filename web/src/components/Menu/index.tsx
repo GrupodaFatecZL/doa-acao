@@ -10,8 +10,8 @@ export function Menu() {
   return (
     <div className="flex absolute h-screen">
       <div
-        className={` ${open ? "w-60" : "w-12 "
-          } bg-[#01C0D5] duration-300`}
+        className={` ${open ? "w-60 bg-[#01C0D5]" : "w-12 "
+          } duration-300`}
       >
         { open ?
           <button
@@ -25,7 +25,7 @@ export function Menu() {
             className={`absolute cursor-pointer m-2 right-1 top-3`}
             onClick={() => setOpen(true)}
           >
-            <List weight="bold" color="#F4F4F4" className="w-5 h-5" />
+            <List weight="bold" color="#01C0D5" size={25} />
           </button>
         }
 
