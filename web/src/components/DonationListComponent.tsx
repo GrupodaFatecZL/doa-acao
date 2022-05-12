@@ -3,6 +3,7 @@ import { Donation } from "./FormNewDonation"
 import { MagnifyingGlass } from "phosphor-react"
 
 import donations from "../../donations.json"
+import { Link } from "react-router-dom"
 
 export function DonationListComponent() {
   const [listDonation, setListDonation] = useState<Donation[]>()
@@ -51,17 +52,17 @@ export function DonationListComponent() {
           <MagnifyingGlass size={25} weight="bold" />
         </button> 
       </div>
-      <div className="w-screen h-screen grid grid-cols-4 place-items-stretch">
+      <div className="w-screen h-screen grid grid-cols-4 place-items-stretch gap-4">
         {listDonation && listDonation.map(donation => {
           return (
-            <a href="#" className="group block max-w-xs mx-auto rounded-lg p-6 bg-white ring-1 ring-slate-900/5 shadow-lg space-y-3 hover:bg-sky-300 hover:ring-sky-300">
-              <div className="w-16 md:w-32 lg:w-48 content-center">
+            <Link to={`/donation/${donation.id}`}  key={donation.id} className="group block max-w-xs mx-auto rounded-lg p-6 bg-white ring-1 ring-slate-900/5 shadow-lg space-y-3 hover:bg-sky-300 hover:ring-sky-300">
+              <div key={donation.id} className="w-16 md:w-32 lg:w-48 content-center">
                 <img className="w-16 md:w-32 lg:w-48" src={donation.fotoProduto} alt={donation.produto} />
                 <span className="text-zinc-900 font-medium text-sm w-full">
                   {donation.produto}
                 </span>
               </div>
-            </a>
+            </Link>
           )
         })}
       </div>
