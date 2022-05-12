@@ -1,5 +1,19 @@
-export function DonationList() {
+import logoBranco from '../assets/logotipo-fundo-branco.svg'
+import { DonationListComponent } from '../components/DonationListComponent';
+import { Menu } from "../components/Menu";
+
+export function DonationList () {
   return (
-    <h1> Lista de doações </h1>
+    <>
+      <Menu />
+      <header className="flex flex-row-reverse space-x-4 space-x-reverse">
+        <img src={logoBranco} alt="logotipo-fundo-branco" />
+        
+      </header>
+      <div className="bg-[#FFFFFF] text-zinc-800 flex justify-center items-center content-center flex-col space-y-3">
+        
+        <DonationListComponent />
+      </div>
+    </>
   )
 }
