@@ -62,20 +62,20 @@ export function DonationIdComponent({ donationId }: DonationProps) {
 
 
   return (
-    <div key={donation?.id} className="w-screen flex grid-cols-2 justify-center content-center gap-6">
+    <div key={donation?.id} className="w-screen flex grid-cols-2 place-content-center gap-6">
       <img
         src={donation?.fotoProduto}
         alt={donation?.produto}
-        className="w-1/4 h-1/4"
+        className="w-1/3 h-1/3 ml-6"
       />
 
       <div className="mt-2 gap-2">
-        <span className="text-zinc-900 font-medium text-sm w-full">
+        <span className="text-zinc-900 text-xl font-semibold w-full">
           {donation?.produto}
         </span>
 
         <div className="w-1/2 justify-content mt-4 mb-4 whitespace-pre-wrap">
-          {donation?.descricao}
+          <strong>Breve descrição: </strong> {donation?.descricao}
         </div>
 
         <a href={redirectWhats()} target="_blank">

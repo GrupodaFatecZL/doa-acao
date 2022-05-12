@@ -31,7 +31,7 @@ export function Welcome() {
             className="mt-4 mb-4 min-w-[304px] w-full min-h-[20px] p-2 bg-[#01C0D5] rounded-md border-transparent flex-1 flex justify-center items-center text-sm text-zinc-100 hover:bg-cyan-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-zinc-900 focus:ring-cyan-500 transition-colors disabled:opacity-50 disabled:hover:bg-cyan-500"
             onClick={() => navigate("/new-donation", { replace: true })}
           >
-            Desejo doar algo?
+            Desejo doar algo
           </button>
           <button
             type="button"
