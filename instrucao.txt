@@ -1,0 +1,5 @@
+Instalar o node js
+- navegar até a pasta do projeto(web) e rodar o comando: npm install
+para instalar as dependências.
+- Utilizar o comando: npm run dev para 
+para rodar o projeto no http://localhost:3000/

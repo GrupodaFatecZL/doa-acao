@@ -299,10 +299,10 @@ export function FormEditUser() {
           />
         </>
       }
-      <div className="flex space-x-2">
+      <div className="gap-2">
         <button
           type="submit"
-          className="mt-4 gap-2 mb-4 min-w-[304px] w-full min-h-[20px] p-2 bg-[#01C0D5] rounded-md border-transparent flex-1 flex justify-center items-center text-sm text-zinc-100 font-medium hover:bg-cyan-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-zinc-900 focus:ring-cyan-500 transition-colors disabled:opacity-50 disabled:hover:bg-cyan-500"
+          className="mt-4 gap-2 mb-4 min-w-[304px] w-full min-h-[20px] p-2 bg-[#e70b0b] rounded-md border-transparent flex-1 flex justify-center items-center text-sm text-zinc-100 font-medium hover:bg-[#e76c25] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-zinc-900 focus:ring-cyan-500 transition-colors disabled:opacity-50 disabled:hover:bg-cyan-500"
           onClick={deleteBD}
         >
           <Trash size={17} />
