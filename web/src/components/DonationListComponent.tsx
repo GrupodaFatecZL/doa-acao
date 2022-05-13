@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react"
-import { Donation } from "./FormNewDonation"
+import { Product } from "./FormNewDonation"
 import { MagnifyingGlass } from "phosphor-react"
 
 import donations from "../../donations.json"
 import { Link } from "react-router-dom"
 
 export function DonationListComponent() {
-  const [listDonation, setListDonation] = useState<Donation[]>()
+  const [listDonation, setListDonation] = useState<Product[]>()
   const [textFilter, setTextFilter] = useState("")
 
   useEffect(() => {
@@ -24,7 +24,7 @@ export function DonationListComponent() {
   }
 
   function filterDonation() {
-    let filteredDonationList: Array<Donation> = []
+    let filteredDonationList: Array<Product> = []
     if (listDonation) {
       listDonation.map((donation) => {
         if (donation.produto.includes(textFilter)) {

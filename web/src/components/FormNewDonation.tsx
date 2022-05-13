@@ -5,7 +5,7 @@ import { Loading } from "./Loading";
 import { Address } from "./FormCreateUser"
 import { UploadSimple, Trash } from "phosphor-react";
 
-export interface Donation {
+export interface Product {
   id?: string;
   produto: string;
   categoria: string;
@@ -24,7 +24,7 @@ export function FormNewDonation() {
   const [isLoadingSend, setIsLoadingSend] = useState(false)
   const [sendDonation, setSendDonation] = useState(false)
 
-  const [donation, setDonation] = useState<Donation | undefined>()
+  const [donation, setDonation] = useState<Product | undefined>()
   const [address, setAddress] = useState<Address | undefined>();
 
   const [produto, setProduto] = useState("")
@@ -70,7 +70,7 @@ export function FormNewDonation() {
     event.preventDefault();
   }
 
-  async function sendBD(donation: Donation | undefined): Promise<void> {
+  async function sendBD(donation: Product | undefined): Promise<void> {
     if (donation) {
 
       navigate("/donation-list", { replace: true });
