@@ -283,13 +283,14 @@ export function FormNewDonation() {
         </>
 
         :
-
-        <button
-          type="button"
+        <>
+        <input
+          type="file" accept="image/*"
           className="gap-3 mt-1 mb-4 min-w-[304px] w-full min-h-[20px] p-2 bg-[#b4b9b9] rounded-md border-transparent flex-1 flex justify-center items-center text-sm text-zinc-700 font-medium hover:bg-cyan-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-zinc-900 focus:ring-cyan-500 transition-colors"
-        >
-          <UploadSimple size={17} /> Enviar foto
-        </button>
+          
+        />
+        <UploadSimple size={17} /> 
+        </>
       }
 
 

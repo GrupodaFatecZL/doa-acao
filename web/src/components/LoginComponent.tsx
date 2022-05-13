@@ -1,9 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router";
-
-
-const clientGoogleId = import.meta.env.VITE_CLIENT_ID_GOOGLE 
+import { LoginWithGoogle } from "./LoginWithGoogle"
 
 export function LoginComponent() {
   let navigate = useNavigate();
@@ -49,7 +47,7 @@ export function LoginComponent() {
 
   
   return (
-    <div className="bg-white max-w-sm p-4 border-8 rounded-md border-transparent flex-1 justify-center items-center text-center">
+    <div className="bg-white max-w-sm p-4 border-8 rounded-md border-transparent flex-1 justify-center items-center text-center content-center">
       <header>
         <span className="leading-6 text-zinc-900 font-medium text-xl">
           Login
@@ -88,14 +86,11 @@ export function LoginComponent() {
         >
           Acessar cadastro
         </button>
-        {/* <GoogleLogin
-          clientId={clientGoogleId}
-          buttonText="Logar com Google"
-          onSuccess={handleGoogleLogin}
-          onFailure={onLoginFailure}
-          cookiePolicy={'single_host_origin'}
-          isSignedIn={true}
-        /> */}
+
+        <div className="flex justify-center">
+          <LoginWithGoogle />
+        </div>
+        
         <br></br>
         <Link to="/create-user" className="leading-6 mt-3 text-sm text-center text-[#01C0D5] font-medium">
           Criar conta
