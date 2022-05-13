@@ -43,7 +43,6 @@ export function LoginWithGoogle(): JSX.Element {
 
   async function signInGoogle() {
     const provider = new GoogleAuthProvider();
-    debugger
 		const result = await signInWithPopup(auth, provider);
 
 		if (result.user) {
