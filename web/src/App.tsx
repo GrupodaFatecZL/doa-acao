@@ -14,38 +14,26 @@ import { PrivateRoutes } from "./services/PrivateRoutes"
 export function App() {
   return (
     <BrowserRouter>
-      <Fragment>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="login" element={<Login />} />
 
           <Route path="create-user" element={<CreateUser />} />
 
-          <Route path="edit-user" element={<PrivateRoutes />}>
+          
             <Route path="edit-user" element={<EditUser />} />
-          </Route>
-          
-          <Route path="welcome" element={<PrivateRoutes />}>
-            <Route path="welcome" element={<Welcome />} />
-          </Route>
-          
-          <Route path="donation-list" element={<PrivateRoutes />}>
-            <Route path="donation-list" element={<DonationList />} />
-          </Route>
-          
-          <Route path="follow-up" element={<PrivateRoutes />}>
-            <Route path="follow-up" element={<FollowUp />} />
-          </Route>
          
-          <Route path="follow-up" element={<PrivateRoutes />}> 
+            <Route path="welcome" element={<Welcome />} />
+          
+            <Route path="donation-list" element={<DonationList />} />
+          
+            <Route path="follow-up" element={<FollowUp />} />
+          
             <Route path="donation/:id" element={<DonationId />} />
-          </Route>
-
-          <Route path="follow-up" element={<PrivateRoutes />}> 
+         
             <Route path="new-donation" element={<NewDonation />} />
-          </Route>
+         
         </Routes>
-      </Fragment>
     </BrowserRouter>
   );
 }
