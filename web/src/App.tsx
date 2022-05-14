@@ -9,31 +9,26 @@ import { DonationList } from "./pages/DonationList";
 import { FollowUp } from "./pages/FollowUp";
 import { DonationId } from "./pages/DonationId";
 import { NewDonation } from "./pages/NewDonation";
-import { PrivateRoutes } from "./services/PrivateRoutes"
+
 
 export function App() {
   return (
     <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="login" element={<Login />} />
+      <Routes>
+        
+        <Route path="/" element={<Home />} />
+        <Route path="login" element={<Login />} />
+        <Route path="create-user" element={<CreateUser />} />
 
-          <Route path="create-user" element={<CreateUser />} />
 
-          
-            <Route path="edit-user" element={<EditUser />} />
-         
-            <Route path="welcome" element={<Welcome />} />
-          
-            <Route path="donation-list" element={<DonationList />} />
-          
-            <Route path="follow-up" element={<FollowUp />} />
-          
-            <Route path="donation/:id" element={<DonationId />} />
-         
-            <Route path="new-donation" element={<NewDonation />} />
-         
-        </Routes>
+        <Route path="edit-user" element={<EditUser />} />
+        <Route path="welcome" element={<Welcome />} />
+        <Route path="donation-list" element={<DonationList />} />
+        <Route path="follow-up" element={<FollowUp />} />
+        <Route path="donation/:id" element={<DonationId />} />
+        <Route path="new-donation" element={<NewDonation />} />
+
+      </Routes>
     </BrowserRouter>
   );
 }
