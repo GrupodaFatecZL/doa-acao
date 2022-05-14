@@ -19,27 +19,27 @@ export function LoginWithGoogle(): JSX.Element {
   const auth = getAuth(app);
   const [user, setUser] = useState<User | null>();
 
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(user => {
-			if (user) {
-				const { displayName, email, uid } = user;
+  // useEffect(() => {
+  //   const unsubscribe = auth.onAuthStateChanged(user => {
+	// 		if (user) {
+	// 			const { displayName, email, uid } = user;
 
-				if (!displayName || !email) {
-					throw new Error('Missing information from Google Account');
-				}
+	// 			if (!displayName || !email) {
+	// 				throw new Error('Missing information from Google Account');
+	// 			}
 
-				setUser ({
-					id: uid,
-					name: displayName,
-					email: email
-				})
-			}
-		})
+	// 			setUser ({
+	// 				id: uid,
+	// 				name: displayName,
+	// 				email: email
+	// 			})
+	// 		}
+	// 	})
 
-		return () => {
-			unsubscribe();
-		}
-	}, []);
+	// 	return () => {
+	// 		unsubscribe();
+	// 	}
+	// }, []);
 
   async function signInGoogle() {
     const provider = new GoogleAuthProvider();
@@ -51,7 +51,7 @@ export function LoginWithGoogle(): JSX.Element {
 			if (!displayName || !email) {
 				throw new Error('Missing information from Google Account');
 			}
-
+			console.log(result.user)
 			setUser ({
 				id: uid,
 				name: displayName,
