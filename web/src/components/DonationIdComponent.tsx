@@ -86,12 +86,12 @@ export function DonationIdComponent({ donationId }: DonationProps) {
         <span className="text-zinc-900 text-xl font-semibold w-full mb-4">
           {donation?.produto}
         </span>
-        <strong> Breve descrição: </strong> {donation?.descricao}
+        <strong>Breve descrição: </strong> {donation?.descricao}
         { containsAddress ?
-          <div className="mt-2 w-1/2 text-zinc-900 text-sm font-normal justify-content mb-4 whitespace-pre-wrap">
+          <div className="mt-2 text-zinc-900 justify-content mb-4 whitespace-pre-wrap">
             <strong>Localização: </strong> {containsAddress?.bairro} - {containsAddress?.cidade} - {containsAddress?.estado}
           </div> :
-          <div className="mt-2 w-1/2 text-zinc-900 text-sm font-normal justify-content mb-4 whitespace-pre-wrap">
+          <div className="mt-2 text-zinc-900 text-sm font-normal justify-content mb-4 whitespace-pre-wrap">
             Solicite o endereço pelo whatsapp
           </div>
         }
@@ -110,9 +110,10 @@ export function DonationIdComponent({ donationId }: DonationProps) {
               </span>
             </button>
             :
-            <div className="w-1/2 justify-content mt-4 mb-4 whitespace-pre-wrap font-light text-sm">
+            <div className="w-1/3 justify-content mt-4 mb-4 whitespace-pre-wrap font-light text-sm">
               Produto reservado pra você até o dia {addDaysToDate()},
-              entre em contato com o doador pelo whatsapp o quanto antes, basta clicar no ícone ao lado.
+              entre em contato com o doador pelo whatsapp o quanto antes para combinar a retirada. 
+              Basta clicar no ícone ao lado.
             </div>
           }
 

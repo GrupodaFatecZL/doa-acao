@@ -23,7 +23,7 @@ export function Home() {
 
       <div className="bg-[#FFFFFF] flex text-zinc-800 pl-16 md:w-sm lg:w-xl">
         <div className="text-left">
-          <h2 className="text-xl font-semibold mb-6">
+          <h2 className="text-2xl font-semibold mb-6">
             Doar faz bem ao coração 💙
           </h2>
           <p>Doar é um ato de amor ao próximo, faz</p>

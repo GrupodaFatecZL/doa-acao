@@ -27,7 +27,8 @@ export function DonationListComponent() {
     let filteredDonationList: Array<Product> = []
     if (listDonation) {
       listDonation.map((donation) => {
-        if (donation.produto.includes(textFilter)) {
+        let nameDonation = donation.produto.toLowerCase()
+        if (nameDonation.includes(textFilter.toLowerCase())) {
           filteredDonationList.push(donation)
         }
       })
