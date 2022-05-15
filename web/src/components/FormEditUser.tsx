@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { FindCEP } from "../../server/findAddress"
 import { Loading } from "./Loading"
-import { Address, User } from "./FormCreateUser"
+import { Address, User } from "../interfaces/interfaces"
 import { Trash, Pencil } from "phosphor-react";
 import { useNavigate } from "react-router-dom";
 

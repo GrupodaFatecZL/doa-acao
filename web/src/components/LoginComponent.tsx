@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router";
 import { LoginWithGoogle } from "./LoginWithGoogle"
 
+
 export function LoginComponent() {
   let navigate = useNavigate();
 
@@ -10,10 +11,6 @@ export function LoginComponent() {
   const [senha, setSenha] = useState("");
   const [starLogin, setStarLogin] = useState(false);
 
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [googleId, setGoogleId] = useState("");
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   function handleSubmitLogin(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -25,25 +22,6 @@ export function LoginComponent() {
 
     // fazer get no banco e verificar se a senha e o login estão corretos
   }
-
-  // function handleGoogleLogin(response: GoogleLoginResponseOffline | GoogleLoginResponse): void {
-  //   console.log(response);
-  //   try {
-  //     if ("profileObj" in response) {
-  //       const {
-  //         profileObj: { name, email, googleId },
-  //       } = response;
-  //       setName(name);
-  //       setEmail(email);
-  //       setGoogleId(googleId);
-  //       setIsLoggedIn(true);
-  //       navigate("/welcome", { replace: true });
-  //     }
-  //     // fazer get no banco e verificar se já existe esse usuário pelo email, senão devemos salvar
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // }
 
   
   return (

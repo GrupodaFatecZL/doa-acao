@@ -2,25 +2,9 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { FindCEP } from "../../server/findAddress"
 import { Loading } from "./Loading";
+import { User, Address } from "../interfaces/interfaces"
 
 
-export interface User {
-  id?: string;
-  nome: string;
-  celular: string;
-  cpf: string;
-  email: string;
-  senha: string;
-  cep: string;
-  complemento: string;
-}
-
-export interface Address {
-  rua: string;
-  bairro: string;
-  cidade: string;
-  estado: string;
-}
 
 export function FormCreateUser() {
   let navigate = useNavigate();

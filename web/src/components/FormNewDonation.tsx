@@ -2,21 +2,10 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { FindCEP } from "../../server/findAddress"
 import { Loading } from "./Loading";
-import { Address } from "./FormCreateUser"
+import { Address, Product } from "../interfaces/interfaces"
 import { UploadSimple, Trash } from "phosphor-react";
 
-export interface Product {
-  id?: string;
-  produto: string;
-  categoria: string;
-  descricao: string;
-  fotoProduto: string;
-  cepDoador: string;
-  complementoDoador: string;
-  chaveUnicaDoador: string;
 
-  status: boolean;
-}
 
 export function FormNewDonation() {
   let navigate = useNavigate();

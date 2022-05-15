@@ -1,7 +1,5 @@
 import { FindCEP } from '../../server/findAddress'
-import { Product } from './FormNewDonation'
-import { User } from './FormCreateUser'
-import { Address } from './FormCreateUser'
+import { Product, Address, User } from '../interfaces/interfaces'
 import { WhatsappLogo, Heart } from 'phosphor-react'
 import { useEffect, useState } from 'react'
 

@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react"
-import { Product } from "./FormNewDonation"
+import { Product } from "../interfaces/interfaces"
 import { MagnifyingGlass } from "phosphor-react"
-
-import donations from "../../donations.json"
 import { Link } from "react-router-dom"
+
+
+import donations from "../../donations.json" //mock
 
 export function DonationListComponent() {
   const [listDonation, setListDonation] = useState<Product[]>()
