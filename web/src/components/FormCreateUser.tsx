@@ -62,7 +62,6 @@ export function FormCreateUser() {
     }
 
     createUser(user).then((resp) => {
-      console.log(resp)
       setIsLoadingSend(false)
       navigate("/welcome", { replace: true });
     }).catch((err) => {
