@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router";
 import { LoginWithGoogle } from "./LoginWithGoogle"
+import { getUser } from "../../server/api"
+import { UsersDataResponse } from "../interfaces/interfaces"
 
 
 export function LoginComponent() {
@@ -10,17 +12,24 @@ export function LoginComponent() {
   const [login, setLogin] = useState("");
   const [senha, setSenha] = useState("");
   const [starLogin, setStarLogin] = useState(false);
-
-
-  function handleSubmitLogin(event: React.FormEvent<HTMLFormElement>) {
+  
+ 
+  async function handleSubmitLogin(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setStarLogin(true);
-    if (login.length > 0 && senha.length > 0) { 
-      navigate("/welcome", { replace: true });
-    }
-    
+   
+    const users: UsersDataResponse[] = await getUser()
+    const userLogin = users.filter(user => user?.chaveUnica === login || user?.cpf === login || user?.email === login)
+    const validateSenha = userLogin.find(user => user?.senha === senha) 
 
-    // fazer get no banco e verificar se a senha e o login estão corretos
+    if (userLogin && validateSenha) {
+      navigate("/welcome", { replace: true });
+    } else if (users && senha.length > 0 && login.length > 0) {
+      setStarLogin(false);
+      alert("Login ou senha inválido, tente novamente")
+      setSenha("")
+      setLogin("")
+    }
   }
 
   

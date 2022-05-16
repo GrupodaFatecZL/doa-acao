@@ -1,4 +1,4 @@
-import { ICreateUser } from "../repositories/ICreateUser";
+import { IUsers } from "../repositories/IUsers";
 
 interface SubmitCreateUserRequest {
   nome: string;
@@ -13,30 +13,17 @@ interface SubmitCreateUserRequest {
 
 export class SubmitUserUseCase {
   constructor(
-    private createUser: ICreateUser
+    private createUser: IUsers
   ) {}
 
-  async execute(request: SubmitCreateUserRequest) {
-    const {  
-      nome,
-      celular,
-      cpf,
-      chaveUnica,
-      email,
-      senha,
-      cep,
-      complemento } = request;
+  async create(request: SubmitCreateUserRequest) {
+    const { nome, celular, cpf, chaveUnica, email, senha, cep, complemento } = request;
 
-
-    await this.createUser.create({ 
-      nome,
-      celular,
-      cpf,
-      chaveUnica,
-      email,
-      senha,
-      cep,
-      complemento 
-    });
+    await this.createUser.create({ nome, celular, cpf, chaveUnica, email, senha, cep, complemento });
   }
+
+ async findMany() {
+  return await this.createUser.find();
+ }
+  
 }

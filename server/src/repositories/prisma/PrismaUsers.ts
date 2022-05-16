@@ -1,10 +1,12 @@
 import { prisma } from "../../prisma";
 import {
   UserData,
-  ICreateUser,
-} from "../ICreateUser";
+  IUsers,
+} from "../IUsers";
 
-export class PrismaCreateUser implements ICreateUser {
+
+
+export class PrismaUsers implements IUsers {
   async create({ nome, celular, cpf, chaveUnica, email, senha, cep, complemento }: UserData) {
     await prisma.user.create({
       data: {
@@ -20,4 +22,11 @@ export class PrismaCreateUser implements ICreateUser {
     });
   }
 
+
+  async find(): Promise<UserData[]  | undefined> {
+    const result = await prisma.user.findMany()
+
+    return result 
+  }
 }
+

@@ -30,3 +30,15 @@ export interface Product {
 
   status: boolean;
 }
+
+export type UsersDataResponse = {
+  id: string;
+  nome: string;
+  celular: string | null;
+  cpf: string | null
+  chaveUnica: string | null;
+  email: string;
+  senha: string | null;
+  cep: string | null;
+  complemento: string | null; 
+}

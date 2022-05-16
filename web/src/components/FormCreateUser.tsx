@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { FindCEP } from "../../server/findAddress"
-import { api } from "../../server/api"
+import { createUser } from "../../server/api"
 import { Loading } from "./Loading";
 import { Address } from "../interfaces/interfaces"
 
@@ -45,16 +45,13 @@ export function FormCreateUser() {
     }
   }
 
-  function handleSubmitForm(event: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmitForm(event: React.FormEvent<HTMLFormElement>) {
     setSentUser(true)
     event.preventDefault();
-  }
 
-
-  async function sendBD(): Promise<void> {
     setIsLoadingSend(true)
 
-    await api.post('/user', {
+    const user = {
       nome: nome,
       celular: celular,
       cpf: cpf,
@@ -62,7 +59,9 @@ export function FormCreateUser() {
       senha: senha,
       cep: cep,
       complemento: complemento
-    }).then(() => {
+    }
+
+    createUser(user).then((resp) => {
       setIsLoadingSend(false)
       navigate("/welcome", { replace: true });
     }).catch((err) => {
@@ -70,7 +69,6 @@ export function FormCreateUser() {
       setIsLoadingSend(false)
       console.log(err)
     })
-
   }
 
 
@@ -286,7 +284,6 @@ export function FormCreateUser() {
       <button
         type="submit"
         className="mt-4 mb-4 min-w-[304px] w-full min-h-[20px] p-2 bg-[#01C0D5] rounded-md border-transparent flex-1 flex justify-center items-center text-sm text-zinc-100 font-medium hover:bg-cyan-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-zinc-900 focus:ring-cyan-500 transition-colors disabled:opacity-50 disabled:hover:bg-cyan-500"
-        onClick={sendBD}
       >
         {isLoadingSend ? <Loading /> : "Salvar"}
       </button>
