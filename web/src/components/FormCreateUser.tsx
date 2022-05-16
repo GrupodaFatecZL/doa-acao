@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { FindCEP } from "../../server/findAddress"
+import { api } from "../../server/api"
 import { Loading } from "./Loading";
-import { User, Address } from "../interfaces/interfaces"
+import { Address } from "../interfaces/interfaces"
 
 
 
@@ -13,17 +14,13 @@ export function FormCreateUser() {
   const [celular, setCelular] = useState("");
   const [cpf, setCpf] = useState("");
   const [email, setEmail] = useState("");
-
   const [senha, setSenha] = useState("");
   const [senhaConfirmada, setSenhaConfirmada] = useState("");
-
   const [cep, setCep] = useState("");
   const [complemento, setComplemento] = useState("");
 
   const [address, setAddress] = useState<Address | undefined>();
   const [sentUser, setSentUser] = useState(false);
-  const [user, setUser] = useState<User>()
-
   const [isLoadingSend, setIsLoadingSend] = useState(false)
 
   useEffect(() => {
@@ -54,10 +51,10 @@ export function FormCreateUser() {
   }
 
 
-  async function handleUser() {
+  async function sendBD(): Promise<void> {
     setIsLoadingSend(true)
 
-    setUser({
+    await api.post('/user', {
       nome: nome,
       celular: celular,
       cpf: cpf,
@@ -65,18 +62,14 @@ export function FormCreateUser() {
       senha: senha,
       cep: cep,
       complemento: complemento
-    })
-
-    await sendBD(user)
-  }
-
-  async function sendBD(user: User | undefined): Promise<void> {
-    if (user) {
+    }).then(() => {
       setIsLoadingSend(false)
-      setUser(undefined)
       navigate("/welcome", { replace: true });
-      // chamar a função para enviar para banco de dados
-    }
+    }).catch((err) => {
+      alert("Desculpe, mas acontenceu um erro")
+      setIsLoadingSend(false)
+      console.log(err)
+    })
 
   }
 
@@ -186,7 +179,7 @@ export function FormCreateUser() {
       <span className="text-zinc-900 font-regular text-sm">
         Confirme a Senha:
       </span>
-      { sentUser && senhaConfirmada.length == 0 &&
+      {sentUser && senhaConfirmada.length == 0 &&
         <>
           <br></br>
           <span className="font-regular text-sm max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-500 ease-linear text-red-600">
@@ -293,7 +286,7 @@ export function FormCreateUser() {
       <button
         type="submit"
         className="mt-4 mb-4 min-w-[304px] w-full min-h-[20px] p-2 bg-[#01C0D5] rounded-md border-transparent flex-1 flex justify-center items-center text-sm text-zinc-100 font-medium hover:bg-cyan-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-zinc-900 focus:ring-cyan-500 transition-colors disabled:opacity-50 disabled:hover:bg-cyan-500"
-        onClick={handleUser}
+        onClick={sendBD}
       >
         {isLoadingSend ? <Loading /> : "Salvar"}
       </button>
