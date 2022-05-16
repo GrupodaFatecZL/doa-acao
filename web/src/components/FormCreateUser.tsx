@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { FindCEP } from "../../server/findAddress"
-import { api } from "../../server/api"
+import { createUser } from "../../server/api"
 import { Loading } from "./Loading";
 import { Address } from "../interfaces/interfaces"
 
@@ -45,13 +45,13 @@ export function FormCreateUser() {
     }
   }
 
-  function handleSubmitForm(event: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmitForm(event: React.FormEvent<HTMLFormElement>) {
     setSentUser(true)
     event.preventDefault();
 
     setIsLoadingSend(true)
 
-    api.post('/user', {
+    const user = {
       nome: nome,
       celular: celular,
       cpf: cpf,
@@ -59,7 +59,10 @@ export function FormCreateUser() {
       senha: senha,
       cep: cep,
       complemento: complemento
-    }).then(() => {
+    }
+
+    createUser(user).then((resp) => {
+      console.log(resp)
       setIsLoadingSend(false)
       navigate("/welcome", { replace: true });
     }).catch((err) => {
