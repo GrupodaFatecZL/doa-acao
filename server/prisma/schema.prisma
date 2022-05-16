@@ -55,3 +55,6 @@ model Donation {
 }
 // comando para criar o banco em desenvolvimento =  npx prisma migrate dev
 // comando para visualizar o banco = npx prisma studio
+
+// documentação para criar o banco as funções
+// https://www.prisma.io/docs/concepts/components/prisma-client/crud

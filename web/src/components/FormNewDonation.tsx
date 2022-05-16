@@ -3,17 +3,16 @@ import { useNavigate } from "react-router";
 import { FindCEP } from "../../server/findAddress"
 import { Loading } from "./Loading";
 import { Address, Product } from "../interfaces/interfaces"
-import { UploadSimple, Trash } from "phosphor-react";
+import { UploadFile } from "./UploadImage";
 
 
 
 export function FormNewDonation() {
   let navigate = useNavigate();
 
-  const [isLoadingSend, setIsLoadingSend] = useState(false)
   const [sendDonation, setSendDonation] = useState(false)
 
-  const [donation, setDonation] = useState<Product | undefined>()
+  const [donation, setDonation] = useState<Product>()
   const [address, setAddress] = useState<Address | undefined>();
 
   const [produto, setProduto] = useState("")
@@ -25,12 +24,8 @@ export function FormNewDonation() {
   const [complementoDoador, setComplementoDoador] = useState("")
   const [chaveUnicaDoador, setChaveUnicaDoador] = useState("")
 
-  const [status, setstatus] = useState(true)
+  const [file, setFile] = useState<File>()
 
-
-  useEffect(() => {
-
-  }, [])
 
   useEffect(() => {
     handleCep(cepDoador)
@@ -46,6 +41,8 @@ export function FormNewDonation() {
   }
 
   function handleSubmitForm(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setSendDonation(true)
     setDonation({
       produto: produto,
       categoria: categoria,
@@ -54,9 +51,23 @@ export function FormNewDonation() {
       cepDoador: cepDoador,
       complementoDoador: complementoDoador,
       chaveUnicaDoador: chaveUnicaDoador,
-      status: status
+      status: true
     })
-    event.preventDefault();
+    setSendDonation(false);
+
+
+    console.log({
+      produto: produto,
+      categoria: categoria,
+      descricao: descricao,
+      fotoProduto: fotoProduto,
+      cepDoador: cepDoador,
+      complementoDoador: complementoDoador,
+      chaveUnicaDoador: chaveUnicaDoador,
+      status: true
+    })
+
+    console.log(file)
   }
 
   async function sendBD(donation: Product | undefined): Promise<void> {
@@ -251,7 +262,10 @@ export function FormNewDonation() {
       <span className="text-zinc-900 font-regular text-sm">
         Foto:
       </span>
-      {sendDonation && !fotoProduto &&
+
+      <UploadFile onFileUploaded={setFile} onFileUrlUploaded={setFotoProduto} />
+
+      { sendDonation && !fotoProduto &&
         <>
           <br></br>
           <span className="font-regular text-sm max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-500 ease-linear text-red-600">
@@ -259,35 +273,12 @@ export function FormNewDonation() {
           </span>
         </>
       }
-      { fotoProduto.length > 0 ?
-        <>
-          <img src="" />
-          <button
-            type="button"
-            className="gap-3 mt-1 mb-4 min-w-[304px] w-full min-h-[20px] p-2 bg-[#b4b9b9] rounded-md border-transparent flex-1 flex justify-center items-center text-sm text-zinc-700 font-medium hover:bg-cyan-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-zinc-900 focus:ring-cyan-500 transition-colors"
-            onClick={() => setFotoProduto("")}
-          >
-            <Trash size={17} /> Apagar foto
-          </button>
-        </>
-
-        :
-        <>
-        <input
-          type="file" accept="image/*"
-          className="gap-3 mt-1 mb-4 min-w-[304px] w-full min-h-[20px] p-2 bg-[#b4b9b9] rounded-md border-transparent flex-1 flex justify-center items-center text-sm text-zinc-700 font-medium hover:bg-cyan-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-zinc-900 focus:ring-cyan-500 transition-colors"
-          
-        />
-        <UploadSimple size={17} /> 
-        </>
-      }
-
-
+      
       <button
         type="submit"
         className="mt-4 mb-4 min-w-[304px] w-full min-h-[20px] p-2 bg-[#01C0D5] rounded-md border-transparent flex-1 flex justify-center items-center text-sm text-zinc-100 font-medium hover:bg-cyan-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-zinc-900 focus:ring-cyan-500 transition-colors disabled:opacity-50 disabled:hover:bg-cyan-500"
       >
-        {isLoadingSend ? <Loading /> : "Salvar"}
+        {sendDonation ? <Loading /> : "Salvar"}
       </button>
     </form>
   )
