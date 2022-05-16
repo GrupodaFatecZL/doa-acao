@@ -1,23 +1,18 @@
 import express from "express";
-import { NodemailerMailAdapter } from "./adapters/nodemailer/NodemailerMailAdapter";
 
-import { PrismaFeedbacksRepository } from "./repositories/prisma/PrismaFeedbacksRepository";
-import { SubmitFeedbackUseCase } from "./useCases/submitFeedbackUseCase";
+import { PrismaCreateUser } from "./repositories/prisma/PrismaCreateUser";
+import { SubmitUserUseCase } from "./useCases/SubmitUserUseCase";
 
 export const routes = express.Router();
 
-routes.post("/feedback", async (req, res) => {
-  const { type, comment, screenshot } = req.body;
 
-  const prismaFeedbacksRepository = new PrismaFeedbacksRepository();
-  //const nodemailerMailAdapter = new NodemailerMailAdapter();
-
-  const submitFeedbackUseCase = new SubmitFeedbackUseCase(
-    prismaFeedbacksRepository
-    //nodemailerMailAdapter
+routes.post("/user", async (req, res) => {
+  const { nome, celular, cpf, email, senha, cep, complemento  } = req.body;
+  const prismaCreateUserRepository = new PrismaCreateUser();
+  const submitUserUseCase = new SubmitUserUseCase(
+    prismaCreateUserRepository
   );
 
-  await submitFeedbackUseCase.execute({ type, comment, screenshot });
-
+  await submitUserUseCase.execute({ nome, celular, cpf, email, senha, cep, complemento });
   return res.status(201).send();
 });

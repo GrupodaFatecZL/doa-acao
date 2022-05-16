@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Address } from '../src/components/FormCreateUser'
+import { Address } from '../src/interfaces/interfaces'
 
 export const findAddress = axios.create({
   baseURL: "https://viacep.com.br/ws/"

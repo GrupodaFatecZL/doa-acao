@@ -10,14 +10,48 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Feedback { // crianção do banco
+model User { // crianção do banco
   id String @id @default(uuid()) // id unico e universal
-  type String 
-  comment String
-  screenshot String
+  nome String 
+  celular String?
+  chaveUnica String? @unique
+  cpf String? @unique
+  email String @unique
+  senha String?
+  cep String?
+  complemento String?
   // acima estão as colunas do banco
 
-  @@map("feedback") // nome do banco
+
+  @@map("user") // nome do banco
+}
+
+model Product { // crianção do banco
+  id String @id @default(uuid()) // id unico e universal
+  produto String
+  categoria String
+  descricao String
+  fotoProduto String
+  cepDoador String
+  complementoDoador String
+  chaveUnicaDoador  String
+
+  status  Boolean @default(true)
+  // acima estão as colunas do banco
+
+
+  @@map("product") // nome do banco
+}
+
+model Donation {
+  id String @id @default(uuid()) // id unico e universal
+  chaveUnicaDoador String
+  chaveUnicaBeneficiario String
+  productId String?
+  dataMaxRetirada DateTime
+  dataRetirada DateTime
+
+  @@map("donation") // nome do banco
 }
 // comando para criar o banco em desenvolvimento =  npx prisma migrate dev
 // comando para visualizar o banco = npx prisma studio

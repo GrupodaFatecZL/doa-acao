@@ -2,29 +2,26 @@ import { useState, createContext, useEffect, ReactNode } from "react";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { app } from "../services/firebaseConfig";
 import { Navigate } from "react-router-dom";
+import { User } from "../interfaces/interfaces"
 
-type UserGoogle = {
+type AuthContextType = {
   signed: boolean;
-  user: User | null;
+  user: User | undefined;
   signInGoogle: () => Promise<void>;
   signOut: () => JSX.Element;
 }
 
-type User = {
-  id: string;
-  name: string | null;
-  email: string | null;
-}
 
 type AuthContextProviderProps = {
 	children: ReactNode;
 }
 
-export const AuthGoogleContext = createContext({} as UserGoogle);
 
 export const AuthGoogleProvider = (props: AuthContextProviderProps) => {
   const auth = getAuth(app);
-  const [user, setUser] = useState<User | null>();
+
+  const [signed, setSigned] = useState(false)
+  const [user, setUser] = useState<User>();
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
@@ -36,10 +33,12 @@ export const AuthGoogleProvider = (props: AuthContextProviderProps) => {
 				}
 
 				setUser ({
-					id: uid,
-					name: displayName,
+					chaveUnica: uid,
+					nome: displayName,
 					email: email
 				})
+
+        setSigned(true)
 			}
 		})
 
@@ -48,9 +47,9 @@ export const AuthGoogleProvider = (props: AuthContextProviderProps) => {
 		}
 	}, []);
 
+
   async function signInGoogle() {
     const provider = new GoogleAuthProvider();
-    debugger
 		const result = await signInWithPopup(auth, provider);
 
 		if (result.user) {
@@ -61,29 +60,33 @@ export const AuthGoogleProvider = (props: AuthContextProviderProps) => {
 			}
 
 			setUser ({
-				id: uid,
-				name: displayName,
+				chaveUnica: uid,
+				nome: displayName,
 				email: email
 			})
+      setSigned(true)
 		}
   }
 
   function signOut() {
     sessionStorage.clear();
-    setUser(null);
+    setUser(undefined);
+    setSigned(false);
     return <Navigate to="/" />;
   }
 
   return (
-    <AuthGoogleContext.Provider
+    <AuthContext.Provider
       value={{
-        signed: !!user,
-        user: user || null,
-        signInGoogle,
-        signOut,
+        signed: signed,
+        user: user,
+        signInGoogle: signInGoogle,
+        signOut: signOut,
       }}
     >
       {props.children}
-    </AuthGoogleContext.Provider>
+    </AuthContext.Provider>
   );
 };
+
+export const AuthContext = createContext({} as AuthContextType);
