@@ -12,7 +12,8 @@ export function FormEditUser() {
 // exemplo => const userBd = await getUser(id)
 // const [user, setUser] = useState<User | {}>(userBd ? userBd : {})
 // const [nome, setNome] = useState(user?.nome);
-
+  const storageUser = sessionStorage.getItem('@users:user');
+  console.log(storageUser)
   const [user, setUser] = useState<User | {}>()
   const [nome, setNome] = useState("");
   const [celular, setCelular] = useState("");

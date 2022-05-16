@@ -12,7 +12,6 @@ export function LoginWithGoogle(): JSX.Element {
   const auth = getAuth(app);
 	const [user, setUser] = useState<User | null>();
 
-
   async function signInGoogle() {
     const provider = new GoogleAuthProvider();
 		const result = await signInWithPopup(auth, provider);
@@ -30,7 +29,13 @@ export function LoginWithGoogle(): JSX.Element {
 				nome: displayName,
 				email: email
 			})
-      debugger
+
+      sessionStorage.setItem('@users:user', JSON.stringify({
+				chaveUnica: uid,
+				nome: displayName,
+				email: email
+			}));
+
       const hasUserInBD = users.find(user => user.chaveUnica === uid || user.email === email)
 
       if (!hasUserInBD) {

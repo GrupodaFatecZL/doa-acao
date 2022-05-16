@@ -23,6 +23,7 @@ export function LoginComponent() {
     const validateSenha = userLogin.find(user => user?.senha === senha) 
 
     if (userLogin && validateSenha) {
+      sessionStorage.setItem('@users:user', JSON.stringify(userLogin));
       navigate("/welcome", { replace: true });
     } else if (users && senha.length > 0 && login.length > 0) {
       setStarLogin(false);
