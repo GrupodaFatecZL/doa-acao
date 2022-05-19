@@ -8,8 +8,6 @@ export const routes = express.Router();
 
 routes.post("/user", async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
-
-  
   const { nome, celular, cpf, email, senha, cep, complemento  } = req.body;
   const prismaCreateUserRepository = new PrismaUsers();
   const submitUserUseCase = new SubmitUserUseCase(
@@ -64,7 +62,6 @@ routes.get("/user", async (req, res) => {
 
 routes.put("/user", async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
-
   const request = req.body;
   const prismaCreateUserRepository = new PrismaUsers();
   const submitUserUseCase = new SubmitUserUseCase(
@@ -74,6 +71,27 @@ routes.put("/user", async (req, res) => {
   try {
     await submitUserUseCase.updateUser({...request });
     return res.status(201).send();
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json(error)
+  }
+});
+
+
+routes.delete("/user", async (req, res) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  const email = req.query.email;
+  const prismaCreateUserRepository = new PrismaUsers();
+  const submitUserUseCase = new SubmitUserUseCase(
+    prismaCreateUserRepository
+  );
+
+  try {
+    if (email) {
+      await submitUserUseCase.deleteUser(email.toString());
+      return res.status(201).send();
+    }
+    return res.status(404).send()
   } catch (error) {
     console.log(error);
     return res.status(500).json(error)

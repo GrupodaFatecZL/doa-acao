@@ -26,8 +26,8 @@ CREATE TABLE "product" (
 -- CreateTable
 CREATE TABLE "donation" (
     "id" TEXT NOT NULL PRIMARY KEY,
-    "chaveUnicaDoador" TEXT NOT NULL,
-    "chaveUnicaBeneficiario" TEXT NOT NULL,
+    "cpfDoador" TEXT NOT NULL,
+    "cpfBeneficiario" TEXT NOT NULL,
     "productId" TEXT,
     "dataMaxRetirada" DATETIME NOT NULL,
     "dataRetirada" DATETIME NOT NULL

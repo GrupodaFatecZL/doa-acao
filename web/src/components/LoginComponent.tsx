@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router";
 import { LoginWithGoogle } from "./LoginWithGoogle"
-import { getUser } from "../../server/api"
+import { getUsers } from "../../server/api"
 import { UsersDataResponse } from "../interfaces/interfaces"
 
 
@@ -18,7 +18,7 @@ export function LoginComponent() {
     event.preventDefault();
     setStarLogin(true);
    
-    const users: UsersDataResponse[] = await getUser()
+    const users: UsersDataResponse[] = await getUsers()
     const userLogin = users.filter(user => user?.cpf === login || user?.email === login)
     const validateSenha = userLogin.find(user => user?.senha === senha) 
 

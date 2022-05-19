@@ -55,7 +55,7 @@ export function FormEditUser() {
   }
 
   function handleSubmitForm(event: React.FormEvent<HTMLFormElement>) {
-    //setSentUser(true)
+    setSentUser(true)
     event.preventDefault();
   }
 
@@ -84,7 +84,6 @@ export function FormEditUser() {
 
 
   async function deleteBD(): Promise<void> {
-    await handleUser()
     if (user) {
       setIsLoadingSend(false)
       setUser(undefined)
