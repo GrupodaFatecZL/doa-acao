@@ -11,7 +11,7 @@ datasource db {
 }
 
 model User { // crianção do banco
-  id String @id @default(uuid()) // id unico e universal
+  idUser String @id @default(uuid()) // id unico e universal
   nome String 
   celular String?
   cpf String? @unique
@@ -26,7 +26,7 @@ model User { // crianção do banco
 }
 
 model Product { // crianção do banco
-  id String @id @default(uuid()) // id unico e universal
+  idProduct String @id @default(uuid()) // id unico e universal
   produto String
   categoria String
   descricao String
@@ -43,10 +43,10 @@ model Product { // crianção do banco
 }
 
 model Donation {
-  id String @id @default(uuid()) // id unico e universal
+  idDonation String @id @default(uuid()) // id unico e universal
   cpfDoador String
   cpfBeneficiario String
-  productId String? 
+  idProduct String 
   dataMaxRetirada DateTime
   dataRetirada DateTime
 

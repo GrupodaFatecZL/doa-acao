@@ -1,6 +1,6 @@
 -- CreateTable
 CREATE TABLE "user" (
-    "id" TEXT NOT NULL PRIMARY KEY,
+    "idUser" TEXT NOT NULL PRIMARY KEY,
     "nome" TEXT NOT NULL,
     "celular" TEXT,
     "cpf" TEXT,
@@ -12,7 +12,7 @@ CREATE TABLE "user" (
 
 -- CreateTable
 CREATE TABLE "product" (
-    "id" TEXT NOT NULL PRIMARY KEY,
+    "idProduct" TEXT NOT NULL PRIMARY KEY,
     "produto" TEXT NOT NULL,
     "categoria" TEXT NOT NULL,
     "descricao" TEXT NOT NULL,
@@ -25,10 +25,10 @@ CREATE TABLE "product" (
 
 -- CreateTable
 CREATE TABLE "donation" (
-    "id" TEXT NOT NULL PRIMARY KEY,
+    "idDonation" TEXT NOT NULL PRIMARY KEY,
     "cpfDoador" TEXT NOT NULL,
     "cpfBeneficiario" TEXT NOT NULL,
-    "productId" TEXT,
+    "idProduct" TEXT NOT NULL,
     "dataMaxRetirada" DATETIME NOT NULL,
     "dataRetirada" DATETIME NOT NULL
 );
