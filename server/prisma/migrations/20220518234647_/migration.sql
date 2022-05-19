@@ -3,7 +3,6 @@ CREATE TABLE "user" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "nome" TEXT NOT NULL,
     "celular" TEXT,
-    "chaveUnica" TEXT,
     "cpf" TEXT,
     "email" TEXT NOT NULL,
     "senha" TEXT,
@@ -20,7 +19,7 @@ CREATE TABLE "product" (
     "fotoProduto" TEXT NOT NULL,
     "cepDoador" TEXT NOT NULL,
     "complementoDoador" TEXT NOT NULL,
-    "chaveUnicaDoador" TEXT NOT NULL,
+    "cpf" TEXT NOT NULL,
     "status" BOOLEAN NOT NULL DEFAULT true
 );
 
@@ -33,9 +32,6 @@ CREATE TABLE "donation" (
     "dataMaxRetirada" DATETIME NOT NULL,
     "dataRetirada" DATETIME NOT NULL
 );
-
--- CreateIndex
-CREATE UNIQUE INDEX "user_chaveUnica_key" ON "user"("chaveUnica");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "user_cpf_key" ON "user"("cpf");

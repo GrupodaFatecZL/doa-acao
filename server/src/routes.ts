@@ -17,7 +17,7 @@ routes.post("/user", async (req, res) => {
   );
 
   try {
-    await submitUserUseCase.create({ nome, celular, cpf, email, senha, cep, complemento });
+    await submitUserUseCase.createUser({ nome, celular, cpf, email, senha, cep, complemento });
     return res.status(201).send();
   } catch (error) {
     console.log(error);
@@ -34,8 +34,46 @@ routes.get("/users", async (req, res) => {
   );
 
   try {
-    const result = await submitUserUseCase.findMany();
+    const result = await submitUserUseCase.findManyUsers();
     return res.status(200).send(result);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json(error)
+  }
+});
+
+routes.get("/user", async (req, res) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  const email = req.query.email;
+  const prismaCreateUserRepository = new PrismaUsers();
+  const submitUserUseCase = new SubmitUserUseCase(
+    prismaCreateUserRepository
+  );
+
+  try {
+    if (email) {
+      const result = await submitUserUseCase.findOneUser(email.toString());
+      return res.status(200).send(result);
+    }
+    return res.status(404).send()
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json(error)
+  }
+});
+
+routes.put("/user", async (req, res) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+
+  const request = req.body;
+  const prismaCreateUserRepository = new PrismaUsers();
+  const submitUserUseCase = new SubmitUserUseCase(
+    prismaCreateUserRepository
+  );
+
+  try {
+    await submitUserUseCase.updateUser({...request });
+    return res.status(201).send();
   } catch (error) {
     console.log(error);
     return res.status(500).json(error)

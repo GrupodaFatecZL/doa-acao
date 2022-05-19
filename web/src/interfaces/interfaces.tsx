@@ -3,7 +3,6 @@ export interface User {
   nome?: string;
   celular?: string;
   cpf?: string;
-  chaveUnica?: string;
   email?: string;
   senha?: string;
   cep?: string;
@@ -36,7 +35,6 @@ export type UsersDataResponse = {
   nome: string;
   celular: string | null;
   cpf: string | null
-  chaveUnica: string | null;
   email: string;
   senha: string | null;
   cep: string | null;

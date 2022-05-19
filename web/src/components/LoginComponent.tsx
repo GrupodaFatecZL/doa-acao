@@ -19,7 +19,7 @@ export function LoginComponent() {
     setStarLogin(true);
    
     const users: UsersDataResponse[] = await getUser()
-    const userLogin = users.filter(user => user?.chaveUnica === login || user?.cpf === login || user?.email === login)
+    const userLogin = users.filter(user => user?.cpf === login || user?.email === login)
     const validateSenha = userLogin.find(user => user?.senha === senha) 
 
     if (userLogin && validateSenha) {

@@ -14,7 +14,6 @@ model User { // crianção do banco
   id String @id @default(uuid()) // id unico e universal
   nome String 
   celular String?
-  chaveUnica String? @unique
   cpf String? @unique
   email String @unique
   senha String?
@@ -34,7 +33,7 @@ model Product { // crianção do banco
   fotoProduto String
   cepDoador String
   complementoDoador String
-  chaveUnicaDoador  String
+  cpf  String
 
   status  Boolean @default(true)
   // acima estão as colunas do banco
@@ -45,9 +44,9 @@ model Product { // crianção do banco
 
 model Donation {
   id String @id @default(uuid()) // id unico e universal
-  chaveUnicaDoador String
-  chaveUnicaBeneficiario String
-  productId String?
+  cpfDoador String
+  cpfBeneficiario String
+  productId String? 
   dataMaxRetirada DateTime
   dataRetirada DateTime
 
