@@ -17,7 +17,6 @@ const header = {
 export const createUser = async (user: User): Promise<void> => {
   api.post('/user', user, header)
     .then((resp) => {
-      console.log(resp)
       return resp
     }).catch((err) => {
       console.log(err)
@@ -41,7 +40,6 @@ export const getUserByEmail = async (email: string): Promise<UsersDataResponse> 
 export const updateUser = async (user: User): Promise<void> => {
   api.put('/user', user, header)
     .then((resp) => {
-      console.log(resp)
       return resp
     }).catch((err) => {
       console.log(err)
@@ -53,7 +51,6 @@ export const updateUser = async (user: User): Promise<void> => {
 export const deleteUserByEmail = async (email: string): Promise<void> => {
   api.delete('/user?email=' + email, header)
     .then((resp) => {
-      console.log(resp)
       return resp
     }).catch((err) => {
       console.log(err)

@@ -63,6 +63,7 @@ export function FormCreateUser() {
 
     createUser(user).then((resp) => {
       setIsLoadingSend(false)
+      sessionStorage.setItem('@users:user', JSON.stringify(user));
       navigate("/welcome", { replace: true });
     }).catch((err) => {
       alert("Desculpe, mas acontenceu um erro")

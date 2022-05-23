@@ -8,7 +8,6 @@ import { DonationIdComponent } from "../components/DonationIdComponent";
 export function DonationId() {
   const { id } = useParams();
 
-  console.log(id)
   return (
     <>
       <Menu />
