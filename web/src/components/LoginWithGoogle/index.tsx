@@ -4,7 +4,7 @@ import { User, UsersDataResponse } from "../../interfaces/interfaces"
 import { useState } from "react";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { app } from "../../services/firebaseConfig";
-import { createUser, getUser } from "../../../server/api"
+import { createUser, getUsers } from "../../../server/api"
 
 
 
@@ -15,7 +15,7 @@ export function LoginWithGoogle(): JSX.Element {
   async function signInGoogle() {
     const provider = new GoogleAuthProvider();
 		const result = await signInWithPopup(auth, provider);
-    const users: UsersDataResponse[] = await getUser()
+    const users: UsersDataResponse[] = await getUsers()
 
 		if (result.user) {
 			const { displayName, email, uid } = result.user;
@@ -25,23 +25,20 @@ export function LoginWithGoogle(): JSX.Element {
 			}
 			
 			setUser ({
-				chaveUnica: uid,
 				nome: displayName,
 				email: email
 			})
 
       sessionStorage.setItem('@users:user', JSON.stringify({
-				chaveUnica: uid,
 				nome: displayName,
 				email: email
 			}));
 
-      const hasUserInBD = users.find(user => user.chaveUnica === uid || user.email === email)
+      const hasUserInBD = users.find(user => user.email === email)
 
       if (!hasUserInBD) {
         await createUser({
           nome: displayName,
-          chaveUnica: uid.toString(),
           email: email
         })
       }

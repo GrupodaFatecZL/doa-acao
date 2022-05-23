@@ -4,36 +4,39 @@ import { Loading } from "./Loading"
 import { Address, User } from "../interfaces/interfaces"
 import { Trash, Pencil } from "phosphor-react";
 import { useNavigate } from "react-router-dom";
+import { updateUser, deleteUserByEmail } from "../../server/api"
 
+
+type userStorage = {
+  nome: string;
+  email: string;
+  celular?: string;
+  cep?: string;
+  complemento?: string;
+  cpf?: string;
+  senha?: string;
+}
 
 export function FormEditUser() {
   let navigate = useNavigate();
-//pegar o usuário no contexto e preencher o form automaticamente
-// exemplo => const userBd = await getUser(id)
-// const [user, setUser] = useState<User | {}>(userBd ? userBd : {})
-// const [nome, setNome] = useState(user?.nome);
-  const storageUser = sessionStorage.getItem('@users:user');
-  console.log(storageUser)
-  const [user, setUser] = useState<User | {}>()
-  const [nome, setNome] = useState("");
-  const [celular, setCelular] = useState("");
-  const [cpf, setCpf] = useState("");
-  const [email, setEmail] = useState("");
+  const storageUser: userStorage = JSON.parse(sessionStorage.getItem('@users:user') || "");
 
-  const [senha, setSenha] = useState("");
-  const [senhaConfirmada, setSenhaConfirmada] = useState("");
-
-  const [cep, setCep] = useState("");
-  const [complemento, setComplemento] = useState("");
-
+  const [nome, setNome] = useState(storageUser?.nome || "");
+  const [celular, setCelular] = useState(storageUser?.celular || "");
+  const [cpf, setCpf] = useState(storageUser?.cpf || "");
+  const [email, setEmail] = useState(storageUser?.email || "");
+  const [senha, setSenha] = useState(storageUser?.senha || "");
+  const [senhaConfirmada, setSenhaConfirmada] = useState(storageUser?.senha || "");
+  const [cep, setCep] = useState(storageUser?.cep || "");
+  const [complemento, setComplemento] = useState(storageUser?.complemento || "");
   const [address, setAddress] = useState<Address | undefined>();
-  const [sentUser, setSentUser] = useState(false);
-  
-
+  const [isEmpty, setIsEmpty] = useState(false)
   const [isLoadingSend, setIsLoadingSend] = useState(false)
 
   useEffect(() => {
-    handleCep(cep)
+    if (cep) {
+      handleCep(cep)
+    }
   }, [cep])
 
 
@@ -55,13 +58,12 @@ export function FormEditUser() {
   }
 
   function handleSubmitForm(event: React.FormEvent<HTMLFormElement>) {
-    //setSentUser(true)
     event.preventDefault();
   }
 
-  async function handleUser() {
+  async function updateBD(): Promise<void> {
     setIsLoadingSend(true)
-    setUser({
+    const user = {
       nome: nome,
       celular: celular,
       cpf: cpf,
@@ -69,41 +71,70 @@ export function FormEditUser() {
       senha: senha,
       cep: cep,
       complemento: complemento
-    })
-  }
-
-  async function updateBD(): Promise<void> {
-    await handleUser()
-    if (user) {
-      setIsLoadingSend(false)
-      setUser(undefined)
-      navigate("/welcome", { replace: true });
-      // chamar a função para editar no banco de dados
     }
+
+    let validationUpdate = []
+    for (let i = 0; i < Object.entries(user).length; i++) {
+      if (Object.entries(user)[i][1] === '') {
+        validationUpdate.push(Object.entries(user)[i])
+        setIsEmpty(true)
+        setIsLoadingSend(false)
+      }
+    }
+
+    if (user && validationUpdate.length <= 0) {
+      updateUser(user).then((resp) => {
+        setIsLoadingSend(false)
+        navigate("/welcome", { replace: true });
+      }).catch((err) => {
+        alert("Desculpe, mas acontenceu um erro")
+        setIsLoadingSend(false)
+        console.log(err)
+      })
+    }
+
+    
   }
 
 
   async function deleteBD(): Promise<void> {
-    await handleUser()
-    if (user) {
-      setIsLoadingSend(false)
-      setUser(undefined)
-      navigate("/", { replace: true });
-      // chamar a função para deletar no banco de dados
+    setIsLoadingSend(true)
+    const user = {
+      nome: nome,
+      celular: celular,
+      cpf: cpf,
+      email: email,
+      senha: senha,
+      cep: cep,
+      complemento: complemento
+    }
+
+
+    if (user.email) {
+      deleteUserByEmail(user.email.toString()).then(() => {
+        setIsLoadingSend(false)
+        navigate("/", { replace: true });
+      }).catch((err) => {
+        alert("Desculpe, mas acontenceu um erro")
+        setIsLoadingSend(false)
+        console.log(err)
+      })
     }
   }
+
 
   return (
     <form onSubmit={handleSubmitForm} className="my-4 w-[60%] flex-col">
       <span className="text-zinc-900 font-regular text-sm">
         Nome completo:
       </span>
-      { sentUser && nome === "" &&
+      {isEmpty && nome === "" &&
         <>
           <br></br>
           <span className="font-regular text-sm max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-500 ease-linear text-red-600">
             Por gentileza, preencha seu nome completo
           </span>
+          <br></br>
         </>
       }
       <input
@@ -118,12 +149,13 @@ export function FormEditUser() {
       <span className="text-zinc-900 font-regular text-sm">
         Celular:
       </span>
-      {sentUser && !celular &&
+      {isEmpty && celular === "" &&
         <>
           <br></br>
           <span className="font-regular text-sm max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-500 ease-linear text-red-600">
             Por gentileza, preencha seu celular
           </span>
+          <br></br>
         </>
       }
       <input
@@ -138,12 +170,13 @@ export function FormEditUser() {
       <span className="text-zinc-900 font-regular text-sm">
         CPF:
       </span>
-      {sentUser && !cpf &&
+      {isEmpty && cpf === "" &&
         <>
           <br></br>
           <span className="font-regular text-sm max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-500 ease-linear text-red-600">
             Por gentileza, preencha seu CPF sem pontos e traços
           </span>
+          <br></br>
         </>
       }
       <input
@@ -158,32 +191,33 @@ export function FormEditUser() {
       <span className="text-zinc-900 font-regular text-sm">
         Email:
       </span>
-      {sentUser && !email &&
-        <>
-          <br></br>
-          <span className="font-regular text-sm max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-500 ease-linear text-red-600">
-            Por gentileza, preencha seu email
-          </span>
-        </>
-      }
+
+      <>
+        <br></br>
+        <span className="text-xs italic font-light max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-500 ease-linear text-red-600">
+          Não é possível alterar o email, caso esteja errado, exclua seu cadastrado e faça um novo
+        </span>
+        <br></br>
+      </>
+
       <input
         key={4}
         type="email"
         className="mt-2 mb-3 min-w-[304px] w-full min-h-[20px] text-sm placeholder-slate-400 text-slate-600 border-slate-300 bg-transparent rounded-md focus:outline-none focus:border-cyan-500 focus:ring-cyan-500 focus:ring-1 resize-none"
-        placeholder="Digite um email ainda não cadastrado"
-        onChange={(e) => setEmail(e.target.value)}
+        disabled={true}
         value={email}
       />
 
       <span className="text-zinc-900 font-regular text-sm">
         Senha:
       </span>
-      {sentUser && !senha &&
+      {isEmpty && senha === "" &&
         <>
           <br></br>
           <span className="font-regular text-sm max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-500 ease-linear text-red-600">
             Por gentileza, preencha uma nova senha
           </span>
+          <br></br>
         </>
       }
       <input
@@ -198,12 +232,13 @@ export function FormEditUser() {
       <span className="text-zinc-900 font-regular text-sm">
         Confirme a Senha:
       </span>
-      { sentUser && senhaConfirmada.length == 0 &&
+      {isEmpty && senhaConfirmada === "" &&
         <>
           <br></br>
           <span className="font-regular text-sm max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-500 ease-linear text-red-600">
             Por gentileza, preencha a senha digita acima
           </span>
+          <br></br>
         </>
       }
       <input
@@ -218,12 +253,13 @@ export function FormEditUser() {
       <span className="text-zinc-900 font-regular text-sm">
         CEP:
       </span>
-      {sentUser && cep.length === 0 &&
+      {isEmpty && cep === "" &&
         <>
           <br></br>
           <span className="font-regular text-sm max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-500 ease-linear text-red-600">
             Por gentileza, preencha seu CEP corretamente
           </span>
+          <br></br>
         </>
       }
       <input
@@ -257,12 +293,13 @@ export function FormEditUser() {
             onChange={(e) => setComplemento(e.target.value)}
             value={complemento}
           />
-          {sentUser && complemento.length === 0 &&
+          {isEmpty && complemento === "" &&
             <>
               <br></br>
               <span className="font-regular text-sm max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-500 ease-linear text-red-600">
                 Por gentileza, preencha seu Complemento
               </span>
+              <br></br>
             </>
           }
 

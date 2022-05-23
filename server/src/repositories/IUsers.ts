@@ -3,7 +3,6 @@ export interface UserData {
   nome: string;
   celular?: string | null;
   cpf?: string | null
-  chaveUnica?: string | null;
   email: string;
   senha?: string | null;
   cep?: string | null;
@@ -11,6 +10,9 @@ export interface UserData {
 }
 
 export interface IUsers {
-  create: (data: UserData) => Promise<void>;
-  find: () => Promise<UserData[]  | undefined>
+  createUser: (data: UserData) => Promise<void>;
+  findUsers: () => Promise<UserData[]  | undefined>
+  findOneUser: (email: string) => Promise<UserData | null>
+  updateUser: (data: UserData) => Promise<void>
+  deleteUser: (email: string) => Promise<void>
 }

@@ -11,10 +11,9 @@ datasource db {
 }
 
 model User { // crianção do banco
-  id String @id @default(uuid()) // id unico e universal
+  idUser String @id @default(uuid()) // id unico e universal
   nome String 
   celular String?
-  chaveUnica String? @unique
   cpf String? @unique
   email String @unique
   senha String?
@@ -27,14 +26,14 @@ model User { // crianção do banco
 }
 
 model Product { // crianção do banco
-  id String @id @default(uuid()) // id unico e universal
+  idProduct String @id @default(uuid()) // id unico e universal
   produto String
   categoria String
   descricao String
   fotoProduto String
   cepDoador String
   complementoDoador String
-  chaveUnicaDoador  String
+  cpf  String
 
   status  Boolean @default(true)
   // acima estão as colunas do banco
@@ -44,10 +43,10 @@ model Product { // crianção do banco
 }
 
 model Donation {
-  id String @id @default(uuid()) // id unico e universal
-  chaveUnicaDoador String
-  chaveUnicaBeneficiario String
-  productId String?
+  idDonation String @id @default(uuid()) // id unico e universal
+  cpfDoador String
+  cpfBeneficiario String
+  idProduct String 
   dataMaxRetirada DateTime
   dataRetirada DateTime
 

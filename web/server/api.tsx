@@ -17,7 +17,6 @@ const header = {
 export const createUser = async (user: User): Promise<void> => {
   api.post('/user', user, header)
     .then((resp) => {
-      console.log(resp)
       return resp
     }).catch((err) => {
       console.log(err)
@@ -26,7 +25,35 @@ export const createUser = async (user: User): Promise<void> => {
 }
 
 
-export const getUser = async (): Promise<UsersDataResponse[]> => {
+export const getUsers = async (): Promise<UsersDataResponse[]> => {
   const response = await api.get<UsersDataResponse[]>('/users', header)
   return response.data
+}
+
+
+export const getUserByEmail = async (email: string): Promise<UsersDataResponse> => {
+  const response = await api.get<UsersDataResponse>('/user?email=' + email, header)
+  return response.data
+}
+
+
+export const updateUser = async (user: User): Promise<void> => {
+  api.put('/user', user, header)
+    .then((resp) => {
+      return resp
+    }).catch((err) => {
+      console.log(err)
+      return err
+    })
+}
+
+
+export const deleteUserByEmail = async (email: string): Promise<void> => {
+  api.delete('/user?email=' + email, header)
+    .then((resp) => {
+      return resp
+    }).catch((err) => {
+      console.log(err)
+      return err
+    })
 }

@@ -4,7 +4,6 @@ interface SubmitCreateUserRequest {
   nome: string;
   celular?: string;
   cpf?: string;
-  chaveUnica?: string;
   email: string;
   senha?: string;
   cep?: string;
@@ -13,17 +12,28 @@ interface SubmitCreateUserRequest {
 
 export class SubmitUserUseCase {
   constructor(
-    private createUser: IUsers
-  ) {}
+    private userUseCase: IUsers
+  ) { }
 
-  async create(request: SubmitCreateUserRequest) {
-    const { nome, celular, cpf, chaveUnica, email, senha, cep, complemento } = request;
+  async createUser(request: SubmitCreateUserRequest) {
+    const { nome, celular, cpf, email, senha, cep, complemento } = request;
 
-    await this.createUser.create({ nome, celular, cpf, chaveUnica, email, senha, cep, complemento });
+    await this.userUseCase.createUser({ nome, celular, cpf, email, senha, cep, complemento });
   }
 
- async findMany() {
-  return await this.createUser.find();
- }
-  
+  async findManyUsers() {
+    return await this.userUseCase.findUsers();
+  }
+
+  async findOneUser(email: string) {
+    return await this.userUseCase.findOneUser(email);
+  }
+
+  async updateUser(request: SubmitCreateUserRequest) {
+    await this.userUseCase.updateUser({ ...request})
+  }
+
+  async deleteUser(email: string) {
+    await this.userUseCase.deleteUser(email)
+  }
 }
