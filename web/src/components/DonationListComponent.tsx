@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react"
-import { ProductDataResponse } from "../interfaces/interfaces"
+import { ProductDataResponse, userStorage } from "../interfaces/interfaces"
 import { MagnifyingGlass } from "phosphor-react"
 import { Link } from "react-router-dom"
 import { getProducts } from "../../server/api"
 
 export function DonationListComponent() {
+  const userLogin: userStorage  = JSON.parse(sessionStorage.getItem('@users:user') || "");
   const [listDonation, setListDonation] = useState<ProductDataResponse[]>()
   const [textFilter, setTextFilter] = useState("")
 
@@ -52,7 +53,7 @@ export function DonationListComponent() {
       </div>
       <div className="w-screen grid grid-cols-4 place-items-stretch gap-4">
         {listDonation && listDonation.map(donation => {
-          if (donation.status === true ) {
+          if (donation.status === true && donation.chaveUnicaDoador !== userLogin?.idUser) {
             return (
               <Link to={`/donation/${donation.idProduct}`}  key={donation.idProduct} className="group block max-w-xs mx-auto rounded-lg p-6 bg-white ring-1 ring-slate-900/5 shadow-lg space-y-3 hover:bg-sky-300 hover:ring-sky-300">
                 <div key={donation.idProduct} className="w-16 md:w-32 lg:w-48 content-center">

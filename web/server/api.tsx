@@ -1,5 +1,9 @@
 import axios from 'axios';
-import { User, UsersDataResponse, Product, ProductDataResponse, ProductDataUpdate } from '../src/interfaces/interfaces'
+import { 
+  User, UsersDataResponse, 
+  Product, ProductDataResponse, ProductDataUpdate, 
+  DonationDataResponse, Donation
+} from '../src/interfaces/interfaces'
 
 
 export const api = axios.create({
@@ -89,6 +93,48 @@ export const updateProduct = async (product: ProductDataUpdate): Promise<void> =
 
 export const deleteProductById = async (idProduct: string): Promise<void> => {
   api.delete('/product?idProduct=' + idProduct, header)
+    .then((resp) => {
+      return resp
+    }).catch((err) => {
+      console.log(err)
+      return err
+    })
+}
+
+// ************************ APIs donations ************************
+
+export const createDonation = async (donation: Donation): Promise<void> => {
+  api.post('/donation', donation, header)
+    .then((resp) => {
+      return resp
+    }).catch((err) => {
+      console.log(err)
+      return err
+    })
+}
+
+export const getDonations = async (): Promise<DonationDataResponse[]> => {
+  const response = await api.get<DonationDataResponse[]>('/donations', header)
+  return response.data
+}
+
+export const getOneDonation = async (params: string): Promise<DonationDataResponse> => {
+  const response = await api.get<DonationDataResponse>('/donation?' + params, header)
+  return response.data
+}
+
+export const updateDonation = async (donation: DonationDataResponse): Promise<void> => {
+  api.put('/donation', donation, header)
+    .then((resp) => {
+      return resp
+    }).catch((err) => {
+      console.log(err)
+      return err
+    })
+}
+
+export const deleteDonationById = async (idDonation: string): Promise<void> => {
+  api.delete('/donation?idDonation=' + idDonation, header)
     .then((resp) => {
       return resp
     }).catch((err) => {

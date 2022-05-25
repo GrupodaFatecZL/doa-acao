@@ -36,8 +36,6 @@ model Product { // crianção do banco
   chaveUnicaDoador  String
 
   status  Boolean @default(true)
-  // acima estão as colunas do banco
-
 
   @@map("product") // nome do banco
 }
@@ -46,9 +44,9 @@ model Donation {
   idDonation String @id @default(uuid()) // id unico e universal
   chaveUnicaDoador String
   chaveUnicaBeneficiario String
-  idProduct String 
+  idProduct String
   dataMaxRetirada DateTime
-  dataRetirada DateTime
+  dataRetirada DateTime?
 
   @@map("donation") // nome do banco
 }

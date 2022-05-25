@@ -30,7 +30,7 @@ CREATE TABLE "donation" (
     "chaveUnicaBeneficiario" TEXT NOT NULL,
     "idProduct" TEXT NOT NULL,
     "dataMaxRetirada" DATETIME NOT NULL,
-    "dataRetirada" DATETIME NOT NULL
+    "dataRetirada" DATETIME
 );
 
 -- CreateIndex

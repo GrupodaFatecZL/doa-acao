@@ -4,10 +4,13 @@ import { PrismaUsers } from "./repositories/prisma/PrismaUsers";
 import { SubmitUserUseCase } from "./useCases/SubmitUserUseCase";
 
 import { PrismaProducts } from "./repositories/prisma/PrismaProducts";
-import { SubmitProductUseCase } from "./useCases/SubmitProductUseCase"
+import { SubmitProductUseCase } from "./useCases/SubmitProductUseCase";
 
+import { PrismaDonations } from "./repositories/prisma/PrismaDonations";
+import { SubmitDonationUseCase } from "./useCases/SubmitDonationUseCase";
 
 export const routes = express.Router();
+
 
 // ************************ APIs users ************************
 routes.post("/user", async (req, res) => {
@@ -183,6 +186,98 @@ routes.delete("/product", async (req, res) => {
   try {
     if (idProduct) {
       await submitProductUseCase.deleteProduct(idProduct.toString());
+      return res.status(201).send();
+    }
+    return res.status(404).send()
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json(error)
+  }
+});
+
+// ************************ APIs donations ************************
+
+routes.post("/donation", async (req, res) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  const { chaveUnicaDoador, chaveUnicaBeneficiario, idProduct, dataMaxRetirada, dataRetirada   } = req.body;
+  const prismaCreateDonationRepository = new PrismaDonations();
+  const submitDonationUseCase = new SubmitDonationUseCase(
+    prismaCreateDonationRepository
+  );
+
+  try {
+    await submitDonationUseCase.createDonation({ chaveUnicaDoador, chaveUnicaBeneficiario, idProduct, dataMaxRetirada, dataRetirada  });
+    return res.status(201).send();
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json(error)
+  }
+});
+
+routes.get("/donations", async (req, res) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  const prismaCreateDonationRepository = new PrismaDonations();
+  const submitDonationUseCase = new SubmitDonationUseCase(
+    prismaCreateDonationRepository
+  );
+
+  try {
+    const result = await submitDonationUseCase.findManyDonations();
+    return res.status(200).send(result);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json(error)
+  }
+});
+
+routes.get("/donation", async (req, res) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  const params = req.query;
+  const prismaCreateDonationRepository = new PrismaDonations();
+  const submitDonationUseCase = new SubmitDonationUseCase(
+    prismaCreateDonationRepository
+  );
+
+  try {
+    if (params) {
+      const result = await submitDonationUseCase.findOneDonation(params);
+      return res.status(200).send(result);
+    }
+    return res.status(404).send()
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json(error)
+  }
+});
+
+routes.put("/donation", async (req, res) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  const request = req.body;
+  const prismaCreateDonationRepository = new PrismaDonations();
+  const submitDonationUseCase = new SubmitDonationUseCase(
+    prismaCreateDonationRepository
+  );
+
+  try {
+    await submitDonationUseCase.updateDonation({...request });
+    return res.status(201).send();
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json(error)
+  }
+});
+
+routes.delete("/donation", async (req, res) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  const idDonation = req.query.idDonation;
+  const prismaCreateDonationRepository = new PrismaDonations();
+  const submitDonationUseCase = new SubmitDonationUseCase(
+    prismaCreateDonationRepository
+  );
+
+  try {
+    if (idDonation) {
+      await submitDonationUseCase.deleteDonation(idDonation.toString());
       return res.status(201).send();
     }
     return res.status(404).send()

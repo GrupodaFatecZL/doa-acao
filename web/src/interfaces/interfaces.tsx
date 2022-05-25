@@ -16,7 +16,6 @@ export interface Address {
   estado: string;
 }
 
-
 export interface Product {
   idProduct?: string;
   produto: string;
@@ -77,4 +76,23 @@ export type userStorage = {
   complemento?: string;
   cpf?: string;
   senha?: string;
+}
+
+
+export type Donation = {
+  idDonation?: string
+  chaveUnicaDoador: string
+  chaveUnicaBeneficiario: string
+  idProduct: string 
+  dataMaxRetirada: Date
+  dataRetirada?: Date | null
+}
+
+export type DonationDataResponse = {
+  idDonation?: string
+  chaveUnicaDoador?: string
+  chaveUnicaBeneficiario?: string
+  idProduct?: string 
+  dataMaxRetirada?: Date
+  dataRetirada?: Date | null
 }
