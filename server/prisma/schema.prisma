@@ -33,7 +33,7 @@ model Product { // crianção do banco
   fotoProduto String
   cepDoador String
   complementoDoador String
-  cpf  String
+  chaveUnicaDoador  String
 
   status  Boolean @default(true)
   // acima estão as colunas do banco
@@ -44,8 +44,8 @@ model Product { // crianção do banco
 
 model Donation {
   idDonation String @id @default(uuid()) // id unico e universal
-  cpfDoador String
-  cpfBeneficiario String
+  chaveUnicaDoador String
+  chaveUnicaBeneficiario String
   idProduct String 
   dataMaxRetirada DateTime
   dataRetirada DateTime

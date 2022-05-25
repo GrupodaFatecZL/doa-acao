@@ -19,15 +19,15 @@ CREATE TABLE "product" (
     "fotoProduto" TEXT NOT NULL,
     "cepDoador" TEXT NOT NULL,
     "complementoDoador" TEXT NOT NULL,
-    "cpf" TEXT NOT NULL,
+    "chaveUnicaDoador" TEXT NOT NULL,
     "status" BOOLEAN NOT NULL DEFAULT true
 );
 
 -- CreateTable
 CREATE TABLE "donation" (
     "idDonation" TEXT NOT NULL PRIMARY KEY,
-    "cpfDoador" TEXT NOT NULL,
-    "cpfBeneficiario" TEXT NOT NULL,
+    "chaveUnicaDoador" TEXT NOT NULL,
+    "chaveUnicaBeneficiario" TEXT NOT NULL,
     "idProduct" TEXT NOT NULL,
     "dataMaxRetirada" DATETIME NOT NULL,
     "dataRetirada" DATETIME NOT NULL

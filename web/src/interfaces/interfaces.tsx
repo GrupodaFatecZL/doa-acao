@@ -1,5 +1,5 @@
 export interface User {
-  id?: string;
+  idUser?: string;
   nome?: string;
   celular?: string;
   cpf?: string;
@@ -18,7 +18,7 @@ export interface Address {
 
 
 export interface Product {
-  id?: string;
+  idProduct?: string;
   produto: string;
   categoria: string;
   descricao: string;
@@ -30,8 +30,34 @@ export interface Product {
   status: boolean;
 }
 
+export interface ProductDataResponse {
+  idProduct?: string;
+  produto: string;
+  categoria?: string;
+  descricao?: string;
+  fotoProduto?: string;
+  cepDoador?: string;
+  complementoDoador?: string;
+  chaveUnicaDoador?: string;
+
+  status?: boolean;
+}
+
+export interface ProductDataUpdate {
+  idProduct?: string;
+  produto?: string;
+  categoria?: string;
+  descricao?: string;
+  fotoProduto?: string;
+  cepDoador?: string;
+  complementoDoador?: string;
+  chaveUnicaDoador?: string;
+
+  status?: boolean;
+}
+
 export type UsersDataResponse = {
-  id: string;
+  idUser: string;
   nome: string;
   celular: string | null;
   cpf: string | null
@@ -39,4 +65,16 @@ export type UsersDataResponse = {
   senha: string | null;
   cep: string | null;
   complemento: string | null; 
+}
+
+
+export type userStorage = {
+  idUser?: string;
+  nome: string;
+  email: string;
+  celular?: string;
+  cep?: string;
+  complemento?: string;
+  cpf?: string;
+  senha?: string;
 }

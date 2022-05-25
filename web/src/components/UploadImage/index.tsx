@@ -1,25 +1,59 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { UploadSimple, Trash } from "phosphor-react";
 
 interface PropsFile {
   onFileUploaded: (file: File) => void;
   onFileUrlUploaded: (fileURL: string) => void;
+  onFileBase64: (base64: string | ArrayBuffer | null) => void;
 }
 
-export function UploadFile({ onFileUploaded, onFileUrlUploaded }: PropsFile) {
+export function UploadFile({ onFileUploaded, onFileUrlUploaded, onFileBase64 }: PropsFile) {
   const [selectedFileURL, setSelectedFileURL] = useState("")
+  const [selectedFile, setSelectedFile] = useState<File>()
+  //const [selectedBase64, setSelectedBase64] = useState<string | ArrayBuffer | null>()
 
   const onDrop = useCallback((acceptedFiles: any[]) => {
     const file = acceptedFiles[0]
     const fileURL = URL.createObjectURL(file)
-    setSelectedFileURL(fileURL)
 
+    setSelectedFile(file)
+    setSelectedFileURL(fileURL)
+    
     onFileUploaded(file)
     onFileUrlUploaded(fileURL)
   }, [onFileUploaded])
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
+
+  useEffect(() => {
+    async function generateBase64() {
+      const base64 = await getBase64(selectedFile);
+      onFileBase64(base64)
+    }
+
+    generateBase64()
+  }, [selectedFile])
+
+  const { getRootProps, getInputProps } = useDropzone({ onDrop })
+
+  const handleImageDeletion = () => {
+    setSelectedFileURL("")
+    onFileUrlUploaded("")
+  }
+  
+
+  async function getBase64 (file: File | undefined): Promise<string | ArrayBuffer | null> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      if(file) {
+        reader.readAsDataURL(file);
+        reader.onloadend = () => {
+          return resolve(reader.result)
+        };
+        return reader.onerror = error => reject(error);
+      }
+    });
+  }
 
   return (
     <>
@@ -41,11 +75,11 @@ export function UploadFile({ onFileUploaded, onFileUrlUploaded }: PropsFile) {
           </div>
         }
       </div>
-      {selectedFileURL &&
+      { selectedFileURL &&
         <div className="grid justify-items-end">
           <button
             className="mt-4 mb-4 gap-2 min-w-[304px] min-h-[10px] flex-1 flex justify-center items-center text-sm font-semibold"
-            onClick={() => setSelectedFileURL("")}
+            onClick={() =>  handleImageDeletion()}
           >
             <Trash size={20} /> Deseja apagar esta foto 
           </button>

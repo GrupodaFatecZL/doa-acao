@@ -48,9 +48,7 @@ export function FormCreateUser() {
   async function handleSubmitForm(event: React.FormEvent<HTMLFormElement>) {
     setSentUser(true)
     event.preventDefault();
-
     setIsLoadingSend(true)
-
     const user = {
       nome: nome,
       celular: celular,
