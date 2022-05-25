@@ -15,6 +15,10 @@ export class SubmitProductUseCase {
     return await this.productUseCase.findProducts();
   }
 
+  async findProductsByUser(idUser : string) {
+    return await this.productUseCase.findProductsByUser(idUser)
+  }
+
   async findOneProduct(params: Object) {
     return await this.productUseCase.findOneProduct(params);
   }

@@ -59,7 +59,7 @@ export function FormCreateUser() {
       complemento: complemento
     }
 
-    createUser(user).then((resp) => {
+    await createUser(user).then((resp) => {
       setIsLoadingSend(false)
       sessionStorage.setItem('@users:user', JSON.stringify(user));
       navigate("/welcome", { replace: true });

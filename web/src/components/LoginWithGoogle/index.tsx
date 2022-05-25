@@ -25,20 +25,17 @@ export function LoginWithGoogle(): JSX.Element {
 			
 			setUser(true)
       const users: UsersDataResponse = await getOneUser(`email=${email}`)
-      
       if (!users) {
-        sessionStorage.setItem('@users:user', JSON.stringify({
-          nome: displayName,
-          email: email
-        }));
-
         await createUser({
           nome: displayName,
           email: email
         })
-      } else {
-        sessionStorage.setItem('@users:user', JSON.stringify(users));
-      }
+      } 
+
+      sessionStorage.setItem('@users:user', JSON.stringify(users ? users : {
+        nome: displayName,
+        email: email
+      }));
 		}
   }
 

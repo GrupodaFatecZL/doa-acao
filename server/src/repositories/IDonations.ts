@@ -11,7 +11,7 @@ export interface DonationData {
 export interface IDonations {
   createDonation: (data: DonationData) => Promise<void>;
   findDonations: () => Promise<DonationData[] | undefined>
-  findOneDonation: (params: Object) => Promise<DonationData | null>
+  findDonationByUser: (IdUser: string) => Promise<DonationData[] | null>
   updateDonation: (data: DonationData) => Promise<void>
   deleteDonation: (idDonation: string) => Promise<void>
 }

@@ -20,7 +20,18 @@ export class PrismaProducts implements IProducts {
     return result 
   }
 
-
+  async findProductsByUser(idUser : string): Promise<ProductData[] | undefined> {
+    const Product = await prisma.product.findMany({
+      where: {
+        chaveUnicaDoador: {
+          equals: idUser
+        } 
+      }
+    })
+    
+    return Product
+  }
+  
   async findOneProduct(params: Object): Promise<ProductData | null> {
     const Product = await prisma.product.findUnique({
       where: 

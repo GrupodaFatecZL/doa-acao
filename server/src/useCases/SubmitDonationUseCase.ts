@@ -15,8 +15,8 @@ export class SubmitDonationUseCase {
     return await this.donationUseCase.findDonations();
   }
 
-  async findOneDonation(params: Object) {
-    return await this.donationUseCase.findOneDonation(params);
+  async findDonationByUser(idUser: string) {
+    return await this.donationUseCase.findDonationByUser(idUser);
   }
 
   async updateDonation(request: DonationData) {

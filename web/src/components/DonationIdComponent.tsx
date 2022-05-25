@@ -5,36 +5,32 @@ import { WhatsappLogo, Heart, ArrowLeft } from 'phosphor-react'
 import { useEffect, useState } from 'react'
 import { Link } from "react-router-dom";
 
-export interface DonationProps {
+interface DonationProps {
   donationId: string | undefined;
 }
 
 export function DonationIdComponent({ donationId }: DonationProps) {
   const [hasInterest, setHasInterest] = useState(false)
   const [containsAddress, setContainsAddress] = useState<Address>()
+  const [containsWhatsapp, setContainsWhatsapp] = useState<string>()
   const [donationLocated, setDonationLocated] = useState<Product | undefined>()
-  const [donor, setDonor] = useState<UsersDataResponse>()
   const [receiver, setReceiver] = useState<userStorage | UsersDataResponse>()
 
   useEffect(() => {
-    getAddress()
     getDonation()
-    getUserIsDonating()
     getUserIsReceivingDonation()
+  }, [])
+
+
+  useEffect(() => {
+    getAddress()
+    redirectWhats()
   }, [])
 
   async function getDonation(): Promise<Product | undefined> {
     const donationLocated: Product | undefined = await getOneProduct(`idProduct=${donationId}`)
     setDonationLocated(donationLocated)
-
     return donationLocated;
-  }
-
-  async function getUserIsDonating(): Promise<UsersDataResponse> {
-    const userIsDonating: UsersDataResponse = await getOneUser(`idUser=${donationLocated?.chaveUnicaDoador}`)
-    setDonor(userIsDonating)
-
-    return userIsDonating;
   }
 
   async function getUserIsReceivingDonation(): Promise<userStorage | UsersDataResponse> {
@@ -42,8 +38,8 @@ export function DonationIdComponent({ donationId }: DonationProps) {
     if (!userIsReceivingDonation.idUser) {
       userIsReceivingDonation = await getOneUser(`email=${userIsReceivingDonation.email}`)
     }
-    setReceiver(userIsReceivingDonation)
 
+    setReceiver(userIsReceivingDonation)
     return userIsReceivingDonation;
   }
 
@@ -54,14 +50,12 @@ export function DonationIdComponent({ donationId }: DonationProps) {
     })
 
     const donation = {
-      chaveUnicaDoador: receiver?.idUser ? receiver?.idUser : "",
-      chaveUnicaBeneficiario: donor?.idUser ? donor?.idUser : "",
+      chaveUnicaDoador: donationLocated?.chaveUnicaDoador ? donationLocated?.chaveUnicaDoador : "",
+      chaveUnicaBeneficiario: receiver?.idUser ? receiver?.idUser : "",
       idProduct: donationId ? donationId : "",
       dataMaxRetirada: addDaysToDate(),
       dataRetirada: null
     }
-
-    console.log(donation)
 
     let validationDonation = []
     for (let i = 0; i < Object.entries(donation).length; i++) {
@@ -71,7 +65,7 @@ export function DonationIdComponent({ donationId }: DonationProps) {
     }
 
     if (donation && validationDonation.length <= 0) {
-      createDonation(donation).then((resp) => {
+      await createDonation(donation).then((resp) => {
         setHasInterest(true);
       }).catch((err) => {
         alert("Desculpe, mas acontenceu um erro")
@@ -83,16 +77,21 @@ export function DonationIdComponent({ donationId }: DonationProps) {
   }
 
 
-  function redirectWhats() {
-    const URL = "http://api.whatsapp.com/send?1=pt_BR&phone=" + donor?.celular
-    return URL
+  async function redirectWhats(): Promise<string>{
+    const user: UsersDataResponse = await getOneUser(`idUser=${donationLocated?.chaveUnicaDoador}`)
+    const URL = "http://api.whatsapp.com/send?1=pt_BR&phone=" + user?.celular
+    setContainsWhatsapp(URL)
+    return URL;
   }
 
-  async function getAddress() {
+
+  async function getAddress(): Promise<Address | undefined> {
     if (donationLocated && donationLocated.cepDoador) {
       const address = await FindCEP(donationLocated.cepDoador)
       setContainsAddress(address)
+      return address;
     }
+    return undefined;
   }
 
   function addDaysToDate() {
@@ -105,7 +104,7 @@ export function DonationIdComponent({ donationId }: DonationProps) {
   return (
     <>
       {
-        donationLocated?.chaveUnicaDoador !== donor?.idUser ?
+        donationLocated?.chaveUnicaDoador !== receiver?.idUser ?
           <div key={donationLocated?.idProduct} className="w-screen flex grid-cols-2 place-content-center gap-6">
             <img
               src={donationLocated?.fotoProduto}
@@ -155,7 +154,7 @@ export function DonationIdComponent({ donationId }: DonationProps) {
                   </div>
                 }
 
-                <a href={redirectWhats()} target="_blank">
+                <a href={containsWhatsapp} target="_blank">
                   <button className="bg-[#48B020] rounded-full px-3 h-10 text-white flex items-center group">
                     <WhatsappLogo className="w-8 h-8" />
                     <span className="max-w-0 overflow-hidden group-hover:max-w-5xl transition-all duration-600 ease-linear">

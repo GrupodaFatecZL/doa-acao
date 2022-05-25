@@ -20,7 +20,7 @@ const header = {
 // ************************ APIs users ************************
 
 export const createUser = async (user: User): Promise<void> => {
-  api.post('/user', user, header)
+  await api.post('/user', user, header)
     .then((resp) => {
       return resp
     }).catch((err) => {
@@ -36,11 +36,11 @@ export const getUsers = async (): Promise<UsersDataResponse[]> => {
 
 export const getOneUser = async (params: string): Promise<UsersDataResponse> => {
   const response = await api.get<UsersDataResponse>('/user?' + params, header)
-  return response.data
+  return response.data;
 }
 
 export const updateUser = async (user: User): Promise<void> => {
-  api.put('/user', user, header)
+  await api.put('/user', user, header)
     .then((resp) => {
       return resp
     }).catch((err) => {
@@ -50,7 +50,7 @@ export const updateUser = async (user: User): Promise<void> => {
 }
 
 export const deleteUserByEmail = async (email: string): Promise<void> => {
-  api.delete('/user?email=' + email, header)
+  await api.delete('/user?email=' + email, header)
     .then((resp) => {
       return resp
     }).catch((err) => {
@@ -62,7 +62,7 @@ export const deleteUserByEmail = async (email: string): Promise<void> => {
 // ************************ APIs products ************************
 
 export const createProduct = async (product: Product): Promise<void> => {
-  api.post('/product', product, header)
+  await api.post('/product', product, header)
     .then((resp) => {
       return resp
     }).catch((err) => {
@@ -81,8 +81,14 @@ export const getOneProduct = async (params: string): Promise<Product> => {
   return response.data
 }
 
+export const getProductsByUser = async (idUser: string): Promise<ProductDataResponse[] | undefined> => {
+  const response = await api.get<ProductDataResponse[]>('/productbyuser?idUser='+idUser, header)
+  return response.data
+  
+}
+
 export const updateProduct = async (product: ProductDataUpdate): Promise<void> => {
-  api.put('/product', product, header)
+  await api.put('/product', product, header)
     .then((resp) => {
       return resp
     }).catch((err) => {
@@ -92,7 +98,7 @@ export const updateProduct = async (product: ProductDataUpdate): Promise<void> =
 }
 
 export const deleteProductById = async (idProduct: string): Promise<void> => {
-  api.delete('/product?idProduct=' + idProduct, header)
+  await api.delete('/product?idProduct=' + idProduct, header)
     .then((resp) => {
       return resp
     }).catch((err) => {
@@ -104,7 +110,7 @@ export const deleteProductById = async (idProduct: string): Promise<void> => {
 // ************************ APIs donations ************************
 
 export const createDonation = async (donation: Donation): Promise<void> => {
-  api.post('/donation', donation, header)
+  await api.post('/donation', donation, header)
     .then((resp) => {
       return resp
     }).catch((err) => {
@@ -118,13 +124,13 @@ export const getDonations = async (): Promise<DonationDataResponse[]> => {
   return response.data
 }
 
-export const getOneDonation = async (params: string): Promise<DonationDataResponse> => {
-  const response = await api.get<DonationDataResponse>('/donation?' + params, header)
+export const getDonationByUser = async (idUser: string): Promise<DonationDataResponse[]> => {
+  const response = await api.get<DonationDataResponse[]>('/donation?idUser='+idUser, header)
   return response.data
 }
 
 export const updateDonation = async (donation: DonationDataResponse): Promise<void> => {
-  api.put('/donation', donation, header)
+  await api.put('/donation', donation, header)
     .then((resp) => {
       return resp
     }).catch((err) => {
@@ -134,7 +140,7 @@ export const updateDonation = async (donation: DonationDataResponse): Promise<vo
 }
 
 export const deleteDonationById = async (idDonation: string): Promise<void> => {
-  api.delete('/donation?idDonation=' + idDonation, header)
+  await api.delete('/donation?idDonation=' + idDonation, header)
     .then((resp) => {
       return resp
     }).catch((err) => {

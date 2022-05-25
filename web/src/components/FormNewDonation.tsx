@@ -22,13 +22,11 @@ export function FormNewDonation() {
   const [cepDoador, setCepDoador] = useState("")
   const [complementoDoador, setComplementoDoador] = useState("")
   const [isEmpty, setIsEmpty] = useState(false)
-
-  const [file, setFile] = useState<File>()
   const [base64, setBase64] = useState<string | ArrayBuffer | null>()
 
   useEffect(() => {
-    handleCep(cepDoador)
     verifyChaveUnicaDoador()
+    handleCep(cepDoador)
   }, [cepDoador])
 
 
@@ -45,6 +43,7 @@ export function FormNewDonation() {
     if (!storageUser.idUser) {
       const user: UsersDataResponse = await getOneUser(`email=${storageUser.email}`);
       setChaveUnicaDoador(user.idUser);
+      sessionStorage.setItem('@users:user', JSON.stringify(user));
     } else {
       setChaveUnicaDoador(storageUser.idUser);
     }
@@ -273,7 +272,7 @@ export function FormNewDonation() {
         Foto:
       </span>
 
-      <UploadFile onFileUploaded={setFile} onFileUrlUploaded={setFotoProduto} onFileBase64={setBase64} />
+      <UploadFile onFileUrlUploaded={setFotoProduto} onFileBase64={setBase64} />
 
       { isEmpty && fotoProduto === "" &&
         <>

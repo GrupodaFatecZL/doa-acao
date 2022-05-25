@@ -138,6 +138,27 @@ routes.get("/products", async (req, res) => {
   }
 });
 
+
+routes.get("/productbyuser", async (req, res) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  const idUser = req.query.idUser;
+  const prismaCreateProductRepository = new PrismaProducts();
+  const submitProductUseCase = new SubmitProductUseCase(
+    prismaCreateProductRepository
+  );
+
+  try {
+    if (idUser) {
+      const result = await submitProductUseCase.findProductsByUser(idUser.toString());
+      return res.status(200).send(result);
+    }
+    return res.status(404).send()
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json(error)
+  }
+});
+
 routes.get("/product", async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   const params = req.query;
@@ -232,15 +253,15 @@ routes.get("/donations", async (req, res) => {
 
 routes.get("/donation", async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  const params = req.query;
+  const idUser = req.query.idUser;
   const prismaCreateDonationRepository = new PrismaDonations();
   const submitDonationUseCase = new SubmitDonationUseCase(
     prismaCreateDonationRepository
   );
 
   try {
-    if (params) {
-      const result = await submitDonationUseCase.findOneDonation(params);
+    if (idUser) {
+      const result = await submitDonationUseCase.findDonationByUser(idUser.toString());
       return res.status(200).send(result);
     }
     return res.status(404).send()

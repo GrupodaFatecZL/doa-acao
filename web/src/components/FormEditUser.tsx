@@ -75,7 +75,7 @@ export function FormEditUser() {
     }
 
     if (user && validationUpdate.length <= 0) {
-      updateUser(user).then((resp) => {
+      await updateUser(user).then((resp) => {
         setIsLoadingSend(false)
         navigate("/welcome", { replace: true });
       }).catch((err) => {
@@ -90,7 +90,7 @@ export function FormEditUser() {
   async function deleteBD(): Promise<void> {
     setIsLoadingSend(true)
     if (email) {
-      deleteUserByEmail(email.toString()).then(() => {
+      await deleteUserByEmail(email.toString()).then(() => {
         setIsLoadingSend(false)
         navigate("/", { replace: true });
       }).catch((err) => {

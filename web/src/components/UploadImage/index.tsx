@@ -3,12 +3,11 @@ import { useDropzone } from 'react-dropzone'
 import { UploadSimple, Trash } from "phosphor-react";
 
 interface PropsFile {
-  onFileUploaded: (file: File) => void;
   onFileUrlUploaded: (fileURL: string) => void;
   onFileBase64: (base64: string | ArrayBuffer | null) => void;
 }
 
-export function UploadFile({ onFileUploaded, onFileUrlUploaded, onFileBase64 }: PropsFile) {
+export function UploadFile({ onFileUrlUploaded, onFileBase64 }: PropsFile) {
   const [selectedFileURL, setSelectedFileURL] = useState("")
   const [selectedFile, setSelectedFile] = useState<File>()
   //const [selectedBase64, setSelectedBase64] = useState<string | ArrayBuffer | null>()
@@ -20,9 +19,8 @@ export function UploadFile({ onFileUploaded, onFileUrlUploaded, onFileBase64 }: 
     setSelectedFile(file)
     setSelectedFileURL(fileURL)
     
-    onFileUploaded(file)
     onFileUrlUploaded(fileURL)
-  }, [onFileUploaded])
+  }, [onFileUrlUploaded])
 
 
   useEffect(() => {

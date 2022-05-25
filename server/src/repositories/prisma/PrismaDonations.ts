@@ -21,10 +21,13 @@ export class PrismaDonations implements IDonations {
   }
 
 
-  async findOneDonation(params: Object): Promise<DonationData | null> {
-    const Donation = await prisma.donation.findUnique({
-      where: 
-        params
+  async findDonationByUser(idUser: string): Promise<DonationData[] | null> {
+    const Donation = await prisma.donation.findMany({
+      where: {
+        chaveUnicaDoador: {
+          equals: idUser
+        } 
+      }
     })
 
     return Donation
