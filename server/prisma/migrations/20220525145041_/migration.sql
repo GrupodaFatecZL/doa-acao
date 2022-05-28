@@ -29,8 +29,8 @@ CREATE TABLE "donation" (
     "chaveUnicaDoador" TEXT NOT NULL,
     "chaveUnicaBeneficiario" TEXT NOT NULL,
     "idProduct" TEXT NOT NULL,
-    "dataMaxRetirada" DATETIME NOT NULL,
-    "dataRetirada" DATETIME
+    "dataMaxRetirada" DATE NOT NULL,
+    "dataRetirada" DATE
 );
 
 -- CreateIndex
