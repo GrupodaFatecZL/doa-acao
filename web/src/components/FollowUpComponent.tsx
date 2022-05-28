@@ -1,18 +1,33 @@
 import { useEffect, useState } from 'react';
-import { getProductsByUser, deleteProductById, getDonationByUser, getOneUser, updateDonation } from '../../server/api'
-import { userStorage, ProductDataResponse, DonationDataResponse, UsersDataResponse } from '../interfaces/interfaces';
+import { getProductsByUser, deleteProductById, getDonationByUser, getUsers, updateDonation, deleteDonationById, updateProduct } from '../../server/api';
+import { userStorage, ProductDataResponse } from '../interfaces/interfaces';
 
+type DonationReceived = {
+  idDonation: string | undefined;
+  idProduct: string | undefined;
+  dataRetirada: string | undefined;
+  nome: string;
+}
+
+type DonationInTransition = {
+  idDonation: string | undefined;
+  idProduct: string | undefined;
+  dataMaxRetirada: string | undefined;
+  nome: string;
+}
 
 export function FollowUpComponent() {
   const [userDonor, setUserDonor] = useState<userStorage>()
-  const [userReceived, setUserReceived] = useState<UsersDataResponse[] | []>()
+  const [donationReceived, setDonationReceived] = useState<DonationReceived[] | undefined>()
+  const [donationInTransition, setDonationInTransition] = useState<DonationInTransition[] | undefined>()
   const [listProduct, setListProduct] = useState<ProductDataResponse[] | []>()
-  const [listDonation, setListDonation] = useState<DonationDataResponse[] | []>()
+
 
   useEffect(() => {
     async function getCurrentDonation() {
-      await getDataFollowUpComponent()
+      await getDataFollowUpComponent();
     }
+
     getCurrentDonation()
   }, [])
 
@@ -20,25 +35,41 @@ export function FollowUpComponent() {
   async function getDataFollowUpComponent() {
     const user: userStorage = JSON.parse(sessionStorage.getItem('@users:user') || "");
     setUserDonor(user);
-    const userValid = user
 
-    if (userValid) {
-      const product = await getProductsByUser(Array.isArray(userValid) ? userValid[0]?.idUser : user?.idUser)
-      const donation = await getDonationByUser(Array.isArray(userValid) ? userValid[0]?.idUser : user?.idUser)
-
+    if (user) {
+      const product = await getProductsByUser(Array.isArray(user) ? user[0]?.idUser : user?.idUser)
       setListProduct(product)
-      setListDonation(donation)
-      return await getDataDonation();
-    }
-  }
-
-  async function getDataDonation(): Promise<void> {
-    if (listDonation) {
-      let userReceived
-      listDonation.map(async (item) => {
-        userReceived = await getOneUser(`idUser=${item?.chaveUnicaBeneficiario}`)
-        setUserReceived([userReceived])
-      })
+      
+      const donations = await getDonationByUser(Array.isArray(user) ? user[0]?.idUser : user?.idUser)
+      const users = await getUsers()
+      
+      if (donations && donations.length > 0) {
+        donations.map((donation) => {
+          if (donation.dataRetirada !== null) {
+            let usersReceived = users.find(user => user.idUser === donation.chaveUnicaBeneficiario)
+            let dateReceived = donation.dataRetirada
+            if (usersReceived && dateReceived) {
+              setDonationReceived([{
+                idDonation: donation.idDonation,
+                idProduct: donation.idProduct,
+                dataRetirada: new Date(dateReceived).toLocaleDateString(),
+                nome: usersReceived.nome
+              }])
+            }
+          } else {
+            let usersInTransition = users.find(user => user.idUser === donation.chaveUnicaBeneficiario)
+            let dateInTransition = donation.dataMaxRetirada 
+            if (usersInTransition && dateInTransition) {
+              setDonationInTransition([{
+                idDonation: donation.idDonation,
+                idProduct: donation.idProduct,
+                dataMaxRetirada: new Date(dateInTransition).toLocaleDateString(),
+                nome: usersInTransition.nome
+              }])
+            }
+          }
+        })
+      }
     }
   }
 
@@ -59,11 +90,34 @@ export function FollowUpComponent() {
         idDonation: idDonation.toString(),
         dataRetirada: new Date()
       }
+
       await updateDonation(data).then(() => {
         getDataFollowUpComponent()
       }).catch((err) => {
         alert("Desculpe, mas acontenceu um erro")
         console.log(err)
+      })
+    }
+  }
+
+  async function undoInterest(idDonation: string | undefined, idProduct: string | undefined) {
+    if (idDonation && idProduct) {
+      await deleteDonationById(idDonation)
+        .then(async() => {
+          const data = {
+            idProduct: idProduct,
+            status: true
+          }
+
+          await updateProduct(data).then(() => {
+            getDataFollowUpComponent()
+          }).catch((err) => {
+            alert("Desculpe, mas acontenceu um erro")
+              console.log(err)
+          })
+      }).catch((err) => {
+        alert("Desculpe, mas acontenceu um erro")
+          console.log(err)
       })
     }
   }
@@ -90,35 +144,43 @@ export function FollowUpComponent() {
                   </div>
                   :
                   <>
-                    { listDonation && userReceived && listDonation.filter(donation => userReceived?.map((user) => {
-                      if (donation.chaveUnicaBeneficiario === user.idUser) {
-                        if (donation.dataRetirada !== null) {
-                          return (
-                            <div className="grid-cols-2 gap-1">
-                              <span className="text-zinc-900 font-regular text-sm whitespace-pre-wrap">
-                                Parabéns, você realizou a doação com sucesso!
-                                A entrega foi confirmada no dia {donation.dataRetirada?.toLocaleDateString()}
-                              </span>
-                            </div>
-                          )
-                        } else {
-                          return (
-                            <div className="grid-cols-2 gap-1">
-                              <span className="text-zinc-900 font-regular text-sm whitespace-pre-wrap">
-                                {user.nome} demonstrou interesse.
-                                Deverá entrar em contato contigo até o dia {donation.dataMaxRetirada?.toLocaleDateString()}
-                              </span>
-                              <button
-                                className="bg-[#08ad3f] mt-4 mb-4 min-h-[20px] p-2 rounded-md border-transparent flex-1 flex justify-center items-center text-sm text-zinc-100 font-medium hover:bg-[#29d161]"
-                                onClick={() => confirmDonation(donation.idDonation)}
-                              >
-                                Confirmar retirada
-                              </button>
-                            </div>
-                          )
-                        }
+                    { donationInTransition && donationInTransition.map((x) => {
+                      if (x.idProduct === item.idProduct) {
+                        return (
+                          <div className="grid-cols-2 gap-1">
+                            <span className="text-zinc-900 font-regular text-sm whitespace-pre-wrap">
+                              {x.nome} demonstrou interesse.
+                              Deverá entrar em contato contigo até o dia {x.dataMaxRetirada}
+                            </span>
+                            <button
+                              className="bg-[#08ad3f] mt-4 mb-4 min-h-[20px] p-2 rounded-md border-transparent flex-1 flex justify-center items-center text-sm text-zinc-100 font-medium hover:bg-[#29d161]"
+                              onClick={() => confirmDonation(x.idDonation)}
+                            >
+                              Confirmar retirada
+                            </button>
+                            <button
+                              className="bg-[#e7f706] mt-4 mb-4 min-h-[20px] p-2 rounded-md border-transparent flex-1 flex justify-center items-center text-sm text-zinc-100 font-medium hover:bg-[#dae485]"
+                              onClick={() => undoInterest(x.idDonation, x.idProduct)}
+                            >
+                              Não haverá retirada
+                            </button>
+                          </div>
+                        )
                       }
-                    }))}
+                    })}
+
+                    { donationReceived && donationReceived.map((y) => {
+                      if (y.idProduct === item.idProduct) {
+                        return (
+                          <div className="grid-cols-2 gap-1">
+                            <span className="text-zinc-900 font-regular text-sm whitespace-pre-wrap">
+                              Parabéns, você realizou a doação para {y.nome} com sucesso!
+                              A entrega foi confirmada no dia {y.dataRetirada}
+                            </span>
+                          </div>
+                        )
+                      }
+                    })}
                   </>
                 }
               </div>

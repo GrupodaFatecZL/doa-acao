@@ -25,7 +25,7 @@ export function DonationIdComponent({ donationId }: DonationProps) {
   useEffect(() => {
     getAddress()
     redirectWhats()
-  }, [])
+  }, [hasInterest])
 
   async function getDonation(): Promise<Product | undefined> {
     const donationLocated: Product | undefined = await getOneProduct(`idProduct=${donationId}`)
