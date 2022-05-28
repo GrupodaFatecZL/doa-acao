@@ -3,9 +3,30 @@ import logoBranco from '../assets/logotipo-fundo-branco.svg'
 import apertoDeMao from '../assets/aperto-de-mao.svg'
 import { Menu } from '../components/Menu'
 import { useNavigate } from 'react-router'
+import { userStorage, UsersDataResponse } from '../interfaces/interfaces';
+import { getOneUser } from '../../server/api';
+import { useEffect } from 'react';
 
 export function Welcome() {
   let navigate = useNavigate();
+  
+  useEffect(() => {
+    async function setUserStorage() {
+      await getUserCurrent()
+    }
+
+    setUserStorage()
+  }, [])
+
+  const getUserCurrent = async () => {
+    const storageUser: userStorage = JSON.parse(sessionStorage.getItem('@users:user') || "");
+    if (!storageUser.idUser || storageUser.idUser !== "") {
+      const user: UsersDataResponse = await getOneUser(`email=${storageUser.email}`);
+      if (user) {
+        sessionStorage.setItem('@users:user', JSON.stringify(user));
+      }
+    }
+  }
 
   return (
     <>

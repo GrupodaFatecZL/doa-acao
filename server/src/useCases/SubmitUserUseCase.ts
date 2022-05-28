@@ -13,7 +13,7 @@ interface SubmitCreateUserRequest {
 export class SubmitUserUseCase {
   constructor(
     private userUseCase: IUsers
-  ) { }
+  ) {}
 
   async createUser(request: SubmitCreateUserRequest) {
     const { nome, celular, cpf, email, senha, cep, complemento } = request;
@@ -25,8 +25,8 @@ export class SubmitUserUseCase {
     return await this.userUseCase.findUsers();
   }
 
-  async findOneUser(email: string) {
-    return await this.userUseCase.findOneUser(email);
+  async findOneUser(params: Object) {
+    return await this.userUseCase.findOneUser(params);
   }
 
   async updateUser(request: SubmitCreateUserRequest) {

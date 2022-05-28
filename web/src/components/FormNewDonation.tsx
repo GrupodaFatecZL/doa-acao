@@ -2,34 +2,33 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { FindCEP } from "../../server/findAddress"
 import { Loading } from "./Loading";
-import { Address, Product } from "../interfaces/interfaces"
+import { Address, userStorage, UsersDataResponse } from "../interfaces/interfaces"
 import { UploadFile } from "./UploadImage";
+import { getOneUser, createProduct } from "../../server/api"
 
 
 
 export function FormNewDonation() {
   let navigate = useNavigate();
+  const storageUser: userStorage = JSON.parse(sessionStorage.getItem('@users:user') || "");
 
   const [sendDonation, setSendDonation] = useState(false)
-
-  const [donation, setDonation] = useState<Product>()
   const [address, setAddress] = useState<Address | undefined>();
-
   const [produto, setProduto] = useState("")
   const [categoria, setCategoria] = useState("")
   const [descricao, setDescricao] = useState("")
   const [fotoProduto, setFotoProduto] = useState("")
-
+  const [chaveUnicaDoador, setChaveUnicaDoador] = useState("")
   const [cepDoador, setCepDoador] = useState("")
   const [complementoDoador, setComplementoDoador] = useState("")
-  const [chaveUnicaDoador, setChaveUnicaDoador] = useState("")
-
-  const [file, setFile] = useState<File>()
-
+  const [isEmpty, setIsEmpty] = useState(false)
+  const [base64, setBase64] = useState<string | ArrayBuffer | null>()
 
   useEffect(() => {
+    verifyChaveUnicaDoador()
     handleCep(cepDoador)
   }, [cepDoador])
+
 
   async function handleCep(cep: string) {
     if (cep.length === 8) {
@@ -40,43 +39,52 @@ export function FormNewDonation() {
     }
   }
 
-  function handleSubmitForm(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setSendDonation(true)
-    setDonation({
-      produto: produto,
-      categoria: categoria,
-      descricao: descricao,
-      fotoProduto: fotoProduto,
-      cepDoador: cepDoador,
-      complementoDoador: complementoDoador,
-      chaveUnicaDoador: chaveUnicaDoador,
-      status: true
-    })
-    setSendDonation(false);
-
-
-    console.log({
-      produto: produto,
-      categoria: categoria,
-      descricao: descricao,
-      fotoProduto: fotoProduto,
-      cepDoador: cepDoador,
-      complementoDoador: complementoDoador,
-      chaveUnicaDoador: chaveUnicaDoador,
-      status: true
-    })
-
-    console.log(file)
-  }
-
-  async function sendBD(donation: Product | undefined): Promise<void> {
-    if (donation) {
-
-      navigate("/donation-list", { replace: true });
-      // chamar a função para enviar para banco de dados
+  async function verifyChaveUnicaDoador() {
+    if (!storageUser.idUser) {
+      const user: UsersDataResponse = await getOneUser(`email=${storageUser.email}`);
+      setChaveUnicaDoador(user.idUser);
+      sessionStorage.setItem('@users:user', JSON.stringify(user));
+    } else {
+      setChaveUnicaDoador(storageUser.idUser);
     }
   }
+
+  async function handleSubmitForm(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setSendDonation(true)
+
+    const donation = {
+      produto: produto,
+      categoria: categoria,
+      descricao: descricao,
+      fotoProduto: typeof base64 === 'string' ? base64 : fotoProduto,
+      cepDoador: cepDoador,
+      complementoDoador: complementoDoador,
+      chaveUnicaDoador: chaveUnicaDoador,
+      status: true
+    }
+
+    let validationCreateProduct = []
+    for (let i = 0; i < Object.entries(donation).length; i++) {
+      if (Object.entries(donation)[i][1] === '') {
+        validationCreateProduct.push(Object.entries(donation)[i])
+        setIsEmpty(true)
+        setSendDonation(false);
+      }
+    }
+
+    if(donation && validationCreateProduct.length <= 0) {
+      createProduct(donation).then((resp) => {
+        setSendDonation(false);
+        navigate("/donation-list", { replace: true });
+      }).catch((err) => {
+        alert("Desculpe, mas acontenceu um erro")
+        setSendDonation(false);
+        console.log(err)
+      })
+    }
+  }
+
 
   const optionsCategory = {
     livro: {
@@ -110,7 +118,7 @@ export function FormNewDonation() {
       <span className="text-zinc-900 font-regular text-sm">
         Nome do produto:
       </span>
-      {sendDonation && produto === "" &&
+      { isEmpty && produto === "" &&
         <>
           <br></br>
           <span className="font-regular text-sm max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-500 ease-linear text-red-600">
@@ -130,7 +138,7 @@ export function FormNewDonation() {
       <span className="text-zinc-900 font-regular text-sm">
         Categoria:
       </span>
-      {sendDonation && !categoria &&
+      { isEmpty && categoria === "" &&
         <>
           <br></br>
           <span className="font-regular text-sm max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-500 ease-linear text-red-600">
@@ -157,7 +165,7 @@ export function FormNewDonation() {
       <span className="text-zinc-900 font-regular text-sm">
         Descrição:
       </span>
-      {sendDonation && !descricao &&
+      { isEmpty && descricao === "" &&
         <>
           <br></br>
           <span className="font-regular text-sm max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-500 ease-linear text-red-600">
@@ -176,7 +184,7 @@ export function FormNewDonation() {
       <span className="text-zinc-900 font-regular text-sm">
         CEP:
       </span>
-      {sendDonation && !cepDoador &&
+      { isEmpty && cepDoador === "" &&
         <>
           <br></br>
           <span className="font-regular text-sm max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-500 ease-linear text-red-600">
@@ -192,7 +200,7 @@ export function FormNewDonation() {
         onChange={(e) => setCepDoador(e.target.value)}
         value={cepDoador}
       />
-      {cepDoador && address?.rua &&
+      { cepDoador && address?.rua &&
         <>
           <span className="text-zinc-900 font-regular text-sm">
             Rua:
@@ -215,12 +223,13 @@ export function FormNewDonation() {
             onChange={(e) => setComplementoDoador(e.target.value)}
             value={complementoDoador}
           />
-          {sendDonation && complementoDoador.length === 0 &&
+          {isEmpty && complementoDoador.length === 0 &&
             <>
               <br></br>
               <span className="font-regular text-sm max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-500 ease-linear text-red-600">
                 Por gentileza, preencha seu Complemento
               </span>
+              <br></br>
             </>
           }
 
@@ -263,9 +272,9 @@ export function FormNewDonation() {
         Foto:
       </span>
 
-      <UploadFile onFileUploaded={setFile} onFileUrlUploaded={setFotoProduto} />
+      <UploadFile onFileUrlUploaded={setFotoProduto} onFileBase64={setBase64} />
 
-      { sendDonation && !fotoProduto &&
+      { isEmpty && fotoProduto === "" &&
         <>
           <br></br>
           <span className="font-regular text-sm max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-500 ease-linear text-red-600">
@@ -273,12 +282,12 @@ export function FormNewDonation() {
           </span>
         </>
       }
-      
+
       <button
         type="submit"
         className="mt-4 mb-4 min-w-[304px] w-full min-h-[20px] p-2 bg-[#01C0D5] rounded-md border-transparent flex-1 flex justify-center items-center text-sm text-zinc-100 font-medium hover:bg-cyan-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-zinc-900 focus:ring-cyan-500 transition-colors disabled:opacity-50 disabled:hover:bg-cyan-500"
       >
-        {sendDonation ? <Loading /> : "Salvar"}
+        { sendDonation ? <Loading /> : "Salvar"}
       </button>
     </form>
   )

@@ -1,47 +1,41 @@
 import { Navigate } from "react-router-dom";
 import GoogleButton from 'react-google-button'
-import { User, UsersDataResponse } from "../../interfaces/interfaces"
+import { UsersDataResponse } from "../../interfaces/interfaces"
 import { useState } from "react";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { app } from "../../services/firebaseConfig";
-import { createUser, getUsers } from "../../../server/api"
+import { createUser, getOneUser } from "../../../server/api"
 
 
 
 export function LoginWithGoogle(): JSX.Element {
   const auth = getAuth(app);
-	const [user, setUser] = useState<User | null>();
+	const [user, setUser] = useState(false);
 
   async function signInGoogle() {
     const provider = new GoogleAuthProvider();
 		const result = await signInWithPopup(auth, provider);
-    const users: UsersDataResponse[] = await getUsers()
-
+    
 		if (result.user) {
-			const { displayName, email, uid } = result.user;
+			const { displayName, email } = result.user;
 
 			if (!displayName || !email) {
 				throw new Error('Missing information from Google Account');
 			}
 			
-			setUser ({
-				nome: displayName,
-				email: email
-			})
-
-      sessionStorage.setItem('@users:user', JSON.stringify({
-				nome: displayName,
-				email: email
-			}));
-
-      const hasUserInBD = users.find(user => user.email === email)
-
-      if (!hasUserInBD) {
+			setUser(true)
+      const users: UsersDataResponse = await getOneUser(`email=${email}`)
+      if (!users) {
         await createUser({
           nome: displayName,
           email: email
         })
-      }
+      } 
+
+      sessionStorage.setItem('@users:user', JSON.stringify(users ? users : {
+        nome: displayName,
+        email: email
+      }));
 		}
   }
 

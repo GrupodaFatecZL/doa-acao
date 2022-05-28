@@ -34,8 +34,8 @@ export function Menu() {
             <li
               key={index}
               className={`flex  rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 
-              ${Menu.gap ? "mt-20" : "mt-2"} ${index === 0 && "bg-light-white"
-                } `}
+              ${Menu.gap ? "mt-20" : "mt-2"} ${index === 0 && "bg-light-white"}`}
+              onClick={() => `${ Menu.hasFunction ? sessionStorage.setItem('@users:user', "") : undefined }` }
             >
               <span className={`${!open && "hidden"} origin-left duration-200`}>
                 <Link to={Menu.src}>

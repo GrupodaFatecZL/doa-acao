@@ -1,21 +1,13 @@
 import { useState, useEffect } from "react";
 import { FindCEP } from "../../server/findAddress"
 import { Loading } from "./Loading"
-import { Address, User } from "../interfaces/interfaces"
+import { Address, userStorage } from "../interfaces/interfaces"
 import { Trash, Pencil } from "phosphor-react";
 import { useNavigate } from "react-router-dom";
 import { updateUser, deleteUserByEmail } from "../../server/api"
 
 
-type userStorage = {
-  nome: string;
-  email: string;
-  celular?: string;
-  cep?: string;
-  complemento?: string;
-  cpf?: string;
-  senha?: string;
-}
+
 
 export function FormEditUser() {
   let navigate = useNavigate();
@@ -83,7 +75,7 @@ export function FormEditUser() {
     }
 
     if (user && validationUpdate.length <= 0) {
-      updateUser(user).then((resp) => {
+      await updateUser(user).then((resp) => {
         setIsLoadingSend(false)
         navigate("/welcome", { replace: true });
       }).catch((err) => {
@@ -92,26 +84,13 @@ export function FormEditUser() {
         console.log(err)
       })
     }
-
-    
   }
 
 
   async function deleteBD(): Promise<void> {
     setIsLoadingSend(true)
-    const user = {
-      nome: nome,
-      celular: celular,
-      cpf: cpf,
-      email: email,
-      senha: senha,
-      cep: cep,
-      complemento: complemento
-    }
-
-
-    if (user.email) {
-      deleteUserByEmail(user.email.toString()).then(() => {
+    if (email) {
+      await deleteUserByEmail(email.toString()).then(() => {
         setIsLoadingSend(false)
         navigate("/", { replace: true });
       }).catch((err) => {

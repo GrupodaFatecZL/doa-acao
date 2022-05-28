@@ -12,7 +12,7 @@ export interface UserData {
 export interface IUsers {
   createUser: (data: UserData) => Promise<void>;
   findUsers: () => Promise<UserData[]  | undefined>
-  findOneUser: (email: string) => Promise<UserData | null>
+  findOneUser: (params: Object) => Promise<UserData | null>
   updateUser: (data: UserData) => Promise<void>
   deleteUser: (email: string) => Promise<void>
 }

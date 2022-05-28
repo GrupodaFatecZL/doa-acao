@@ -48,9 +48,7 @@ export function FormCreateUser() {
   async function handleSubmitForm(event: React.FormEvent<HTMLFormElement>) {
     setSentUser(true)
     event.preventDefault();
-
     setIsLoadingSend(true)
-
     const user = {
       nome: nome,
       celular: celular,
@@ -61,7 +59,7 @@ export function FormCreateUser() {
       complemento: complemento
     }
 
-    createUser(user).then((resp) => {
+    await createUser(user).then((resp) => {
       setIsLoadingSend(false)
       sessionStorage.setItem('@users:user', JSON.stringify(user));
       navigate("/welcome", { replace: true });

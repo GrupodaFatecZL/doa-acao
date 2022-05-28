@@ -28,11 +28,10 @@ export class PrismaUsers implements IUsers {
   }
 
 
-  async findOneUser(email: string): Promise<UserData | null> {
+  async findOneUser(params: Object): Promise<UserData | null> {
     const user = await prisma.user.findUnique({
-      where: {
-        email: email,
-      },
+      where: 
+        params
     })
 
     return user
@@ -58,7 +57,5 @@ export class PrismaUsers implements IUsers {
       },
     })
   }
-
-  
 }
 

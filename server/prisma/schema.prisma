@@ -33,22 +33,20 @@ model Product { // crianção do banco
   fotoProduto String
   cepDoador String
   complementoDoador String
-  cpf  String
+  chaveUnicaDoador  String
 
   status  Boolean @default(true)
-  // acima estão as colunas do banco
-
 
   @@map("product") // nome do banco
 }
 
 model Donation {
   idDonation String @id @default(uuid()) // id unico e universal
-  cpfDoador String
-  cpfBeneficiario String
-  idProduct String 
+  chaveUnicaDoador String
+  chaveUnicaBeneficiario String
+  idProduct String
   dataMaxRetirada DateTime
-  dataRetirada DateTime
+  dataRetirada DateTime?
 
   @@map("donation") // nome do banco
 }

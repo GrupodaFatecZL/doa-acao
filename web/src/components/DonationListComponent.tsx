@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react"
-import { Product } from "../interfaces/interfaces"
+import { ProductDataResponse, userStorage } from "../interfaces/interfaces"
 import { MagnifyingGlass } from "phosphor-react"
 import { Link } from "react-router-dom"
-
-
-import donations from "../../donations.json" //mock
+import { getProducts } from "../../server/api"
 
 export function DonationListComponent() {
-  const [listDonation, setListDonation] = useState<Product[]>()
+  const userLogin: userStorage  = JSON.parse(sessionStorage.getItem('@users:user') || "");
+  const [listDonation, setListDonation] = useState<ProductDataResponse[]>()
   const [textFilter, setTextFilter] = useState("")
 
   useEffect(() => {
@@ -18,14 +17,13 @@ export function DonationListComponent() {
     }
   }, [textFilter])
 
-  function getDonationList() {
-    //pegar do banco os donation
-    const data = donations;
+  async function getDonationList() {
+    const data: ProductDataResponse[] = await getProducts();
     setListDonation(data)
   }
 
-  function filterDonation() {
-    let filteredDonationList: Array<Product> = []
+  async function filterDonation() {
+    let filteredDonationList: Array<ProductDataResponse> = []
     if (listDonation) {
       listDonation.map((donation) => {
         let nameDonation = donation.produto.toLowerCase()
@@ -34,7 +32,6 @@ export function DonationListComponent() {
         }
       })
     }
-
     setListDonation(filteredDonationList)
   }
 
@@ -54,18 +51,20 @@ export function DonationListComponent() {
           <MagnifyingGlass size={25} weight="bold" />
         </button> 
       </div>
-      <div className="w-screen h-screen grid grid-cols-4 place-items-stretch gap-4">
+      <div className="w-screen grid grid-cols-4 place-items-stretch gap-4">
         {listDonation && listDonation.map(donation => {
-          return (
-            <Link to={`/donation/${donation.id}`}  key={donation.id} className="group block max-w-xs mx-auto rounded-lg p-6 bg-white ring-1 ring-slate-900/5 shadow-lg space-y-3 hover:bg-sky-300 hover:ring-sky-300">
-              <div key={donation.id} className="w-16 md:w-32 lg:w-48 content-center">
-                <img className="w-16 md:w-32 lg:w-48" src={donation.fotoProduto} alt={donation.produto} />
-                <span className="text-zinc-900 font-medium text-sm w-full">
-                  {donation.produto}
-                </span>
-              </div>
-            </Link>
-          )
+          if (donation.status === true && donation.chaveUnicaDoador !== userLogin?.idUser) {
+            return (
+              <Link to={`/donation/${donation.idProduct}`}  key={donation.idProduct} className="group block max-w-xs mx-auto rounded-lg p-6 bg-white ring-1 ring-slate-900/5 shadow-lg space-y-3 hover:bg-sky-300 hover:ring-sky-300">
+                <div key={donation.idProduct} className="w-16 md:w-32 lg:w-48 content-center">
+                  <img className="w-16 md:w-32 lg:w-48" src={donation.fotoProduto} alt={donation.produto} />
+                  <span className="text-zinc-900 font-medium text-sm w-full">
+                    {donation.produto}
+                  </span>
+                </div>
+              </Link>
+            )
+          }
         })}
       </div>
     </>
