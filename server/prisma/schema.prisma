@@ -10,6 +10,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+
 model User { // crianção do banco
   idUser String @id @default(uuid()) // id unico e universal
   nome String 
@@ -45,8 +46,8 @@ model Donation {
   chaveUnicaDoador String
   chaveUnicaBeneficiario String
   idProduct String
-  dataMaxRetirada DateTime
-  dataRetirada DateTime?
+  dataMaxRetirada DateTime @db.Date()
+  dataRetirada DateTime? @db.Date()
 
   @@map("donation") // nome do banco
 }
