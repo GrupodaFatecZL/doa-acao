@@ -11,7 +11,7 @@ import { getOneUser, createProduct } from "../../server/api"
 export function FormNewDonation() {
   let navigate = useNavigate();
   const storageUser: userStorage = JSON.parse(sessionStorage.getItem('@users:user') || "");
-
+  
   const [sendDonation, setSendDonation] = useState(false)
   const [address, setAddress] = useState<Address | undefined>();
   const [produto, setProduto] = useState("")
@@ -142,7 +142,7 @@ export function FormNewDonation() {
         <>
           <br></br>
           <span className="font-regular text-sm max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-500 ease-linear text-red-600">
-            Por gentileza, preencha seu celular
+            Por gentileza, preencha uma categoria
           </span>
         </>
       }
@@ -153,13 +153,14 @@ export function FormNewDonation() {
         value={categoria}
       >
         {Object.entries(optionsCategory).map(([key, items]) => {
-          return (
-            <option value={items.value} key={key}>
-              {items.text}
-            </option>
-          )
-        })
+            return (
+              <option value={items.value} key={key}>
+                {items.text}
+              </option>
+            )
+          })
         }
+        <option value="" data-default disabled selected></option>
       </select>
 
       <span className="text-zinc-900 font-regular text-sm">
