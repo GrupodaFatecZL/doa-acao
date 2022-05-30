@@ -17,11 +17,14 @@ export function DonationIdComponent({ donationId }: DonationProps) {
   const [receiver, setReceiver] = useState<userStorage | UsersDataResponse>()
 
   useEffect(() => {
-    getAddress()
-    redirectWhats()
     getDonation()
     getUserIsReceivingDonation()
   }, [])
+
+  useEffect(() => {
+    getAddress()
+    redirectWhats()
+  }, [hasInterest])
 
 
   async function getDonation(): Promise<Product | undefined> {
