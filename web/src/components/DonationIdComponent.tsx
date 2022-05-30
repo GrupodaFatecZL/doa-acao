@@ -17,15 +17,12 @@ export function DonationIdComponent({ donationId }: DonationProps) {
   const [receiver, setReceiver] = useState<userStorage | UsersDataResponse>()
 
   useEffect(() => {
+    getAddress()
+    redirectWhats()
     getDonation()
     getUserIsReceivingDonation()
   }, [])
 
-
-  useEffect(() => {
-    getAddress()
-    redirectWhats()
-  }, [hasInterest])
 
   async function getDonation(): Promise<Product | undefined> {
     const donationLocated: Product | undefined = await getOneProduct(`idProduct=${donationId}`)
@@ -79,7 +76,7 @@ export function DonationIdComponent({ donationId }: DonationProps) {
 
   async function redirectWhats(): Promise<string>{
     const user: UsersDataResponse = await getOneUser(`idUser=${donationLocated?.chaveUnicaDoador}`)
-    const URL = "http://api.whatsapp.com/send?1=pt_BR&phone=" + user?.celular
+    const URL = "http://api.whatsapp.com/send?1=pt_BR&phone=55" + user?.celular
     setContainsWhatsapp(URL)
     return URL;
   }
