@@ -14,8 +14,8 @@ export function FormNewDonation() {
   
   const [sendDonation, setSendDonation] = useState(false)
   const [address, setAddress] = useState<Address | undefined>();
-  const [produto, setProduto] = useState("")
-  const [categoria, setCategoria] = useState("")
+  const [produto, setProduto] = useState("") 
+  const [categoria, setCategoria] = useState("") 
   const [descricao, setDescricao] = useState("")
   const [fotoProduto, setFotoProduto] = useState("")
   const [chaveUnicaDoador, setChaveUnicaDoador] = useState("")
@@ -23,7 +23,7 @@ export function FormNewDonation() {
   const [complementoDoador, setComplementoDoador] = useState("")
   const [isEmpty, setIsEmpty] = useState(false)
   const [base64, setBase64] = useState<string | ArrayBuffer | null>()
-
+  
   useEffect(() => {
     verifyChaveUnicaDoador()
     handleCep(cepDoador)
@@ -76,7 +76,13 @@ export function FormNewDonation() {
     if(donation && validationCreateProduct.length <= 0) {
       createProduct(donation).then((resp) => {
         setSendDonation(false);
-        navigate("/donation-list", { replace: true });
+        setProduto("")
+        setCategoria("")
+        setDescricao("")
+        setFotoProduto("")
+        setCepDoador("")
+        setComplementoDoador("")
+        setBase64("")
       }).catch((err) => {
         alert("Desculpe, mas acontenceu um erro")
         setSendDonation(false);
