@@ -7,7 +7,7 @@ import {
 
 
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL
+  baseURL: "https://doa-acao-production.up.railway.app" //import.meta.env.VITE_API_URL
 })
 
 const header = {

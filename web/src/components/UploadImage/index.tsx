@@ -10,7 +10,6 @@ interface PropsFile {
 export function UploadFile({ onFileUrlUploaded, onFileBase64 }: PropsFile) {
   const [selectedFileURL, setSelectedFileURL] = useState("")
   const [selectedFile, setSelectedFile] = useState<File>()
-  //const [selectedBase64, setSelectedBase64] = useState<string | ArrayBuffer | null>()
 
   const onDrop = useCallback((acceptedFiles: any[]) => {
     const file = acceptedFiles[0]

@@ -18,62 +18,79 @@ export function DonationIdComponent({ donationId }: DonationProps) {
 
   useEffect(() => {
     getDonation()
-    getUserIsReceivingDonation()
   }, [])
 
   useEffect(() => {
     getAddress()
     redirectWhats()
+  })
+
+
+  useEffect(() => {
+    if(!containsAddress && !containsWhatsapp) {
+      getAddress()
+      redirectWhats()
+    }
   }, [hasInterest])
 
 
   async function getDonation(): Promise<Product | undefined> {
     const donationLocated: Product | undefined = await getOneProduct(`idProduct=${donationId}`)
     setDonationLocated(donationLocated)
+    
     return donationLocated;
   }
 
   async function getUserIsReceivingDonation(): Promise<userStorage | UsersDataResponse> {
-    let userIsReceivingDonation: userStorage | UsersDataResponse = JSON.parse(sessionStorage.getItem('@users:user') || "");
-    if (!userIsReceivingDonation.idUser) {
-      userIsReceivingDonation = await getOneUser(`email=${userIsReceivingDonation.email}`)
+    const userIsReceivingDonation: userStorage | UsersDataResponse = JSON.parse(sessionStorage.getItem('@users:user') || "");
+    let userReceiver = Array.isArray(userIsReceivingDonation) ?  userIsReceivingDonation[0] : userIsReceivingDonation
+
+    if (!userReceiver.idUser) {
+      userReceiver = await getOneUser(`email=${userReceiver.email}`)
     }
 
-    setReceiver(userIsReceivingDonation)
-    return userIsReceivingDonation;
+    setReceiver(userReceiver)
+    return userReceiver;
   }
 
   async function handleInterest() {
-    await updateProduct({
-      idProduct: donationId,
-      status: false
-    })
-
-    const donation = {
-      chaveUnicaDoador: donationLocated?.chaveUnicaDoador ? donationLocated?.chaveUnicaDoador : "",
-      chaveUnicaBeneficiario: receiver?.idUser ? receiver?.idUser : "",
-      idProduct: donationId ? donationId : "",
-      dataMaxRetirada: addDaysToDate(),
-      dataRetirada: null
-    }
-
-    let validationDonation = []
-    for (let i = 0; i < Object.entries(donation).length; i++) {
-      if (Object.entries(donation)[i][1] === '') {
-        validationDonation.push(Object.entries(donation)[i])
+    await getUserIsReceivingDonation().then(async (users) => {
+      const donation = {
+        chaveUnicaDoador: donationLocated?.chaveUnicaDoador ? donationLocated?.chaveUnicaDoador : "",
+        chaveUnicaBeneficiario: users?.idUser ? users?.idUser : "",
+        idProduct: donationId ? donationId : "",
+        dataMaxRetirada: addDaysToDate(),
+        dataRetirada: null
       }
-    }
 
-    if (donation && validationDonation.length <= 0) {
-      await createDonation(donation).then((resp) => {
-        setHasInterest(true);
-      }).catch((err) => {
-        alert("Desculpe, mas acontenceu um erro")
-        console.log(err)
-      })
-    } else {
-      alert("Ocorreu um erro ao tentar reservar esse item para você. Verifique se seu cadastro está atualizado")
-    }
+      let validationDonation = []
+      for (let i = 0; i < Object.entries(donation).length; i++) {
+        if (Object.entries(donation)[i][1] === '') {
+          validationDonation.push(Object.entries(donation)[i])
+        }
+      }
+
+  
+      if (donation && validationDonation.length <= 0) {
+        await createDonation(donation).then(async () => {
+          await updateProduct({
+            idProduct: donationId,
+            status: false
+          }).then(() => {
+            setHasInterest(true);
+          }).catch((err) => {
+            alert("Desculpe, mas acontenceu um erro")
+            console.log(err)
+          })
+  
+        }).catch((err) => {
+          alert("Desculpe, mas acontenceu um erro")
+          console.log(err)
+        })
+      } else {
+        alert("Ocorreu um erro ao tentar reservar esse item para você. Verifique se seu cadastro está atualizado")
+      }
+    })
   }
 
 

@@ -12,15 +12,15 @@ import { updateUser, deleteUserByEmail } from "../../server/api"
 export function FormEditUser() {
   let navigate = useNavigate();
   const storageUser: userStorage = JSON.parse(sessionStorage.getItem('@users:user') || "");
-
-  const [nome, setNome] = useState(storageUser?.nome || "");
-  const [celular, setCelular] = useState(storageUser?.celular || "");
-  const [cpf, setCpf] = useState(storageUser?.cpf || "");
-  const [email, setEmail] = useState(storageUser?.email || "");
-  const [senha, setSenha] = useState(storageUser?.senha || "");
-  const [senhaConfirmada, setSenhaConfirmada] = useState(storageUser?.senha || "");
-  const [cep, setCep] = useState(storageUser?.cep || "");
-  const [complemento, setComplemento] = useState(storageUser?.complemento || "");
+ 
+  const [nome, setNome] = useState(Array.isArray(storageUser) ? storageUser[0]?.nome : storageUser?.nome || "");
+  const [celular, setCelular] = useState(Array.isArray(storageUser) ? storageUser[0]?.celular : storageUser?.celular || "");
+  const [cpf, setCpf] = useState(Array.isArray(storageUser) ? storageUser[0]?.cpf : storageUser?.cpf || "");
+  const [email, setEmail] = useState(Array.isArray(storageUser) ? storageUser[0]?.email : storageUser?.email || "");
+  const [senha, setSenha] = useState(Array.isArray(storageUser) ? storageUser[0]?.senha : storageUser?.senha || "");
+  const [senhaConfirmada, setSenhaConfirmada] = useState(Array.isArray(storageUser) ? storageUser[0]?.senha : storageUser?.senha || "");
+  const [cep, setCep] = useState(Array.isArray(storageUser) ? storageUser[0]?.cep : storageUser?.cep || "");
+  const [complemento, setComplemento] = useState(Array.isArray(storageUser) ? storageUser[0]?.completo : storageUser?.complemento || "");
   const [address, setAddress] = useState<Address | undefined>();
   const [isEmpty, setIsEmpty] = useState(false)
   const [isLoadingSend, setIsLoadingSend] = useState(false)
@@ -75,7 +75,7 @@ export function FormEditUser() {
     }
 
     if (user && validationUpdate.length <= 0) {
-      await updateUser(user).then((resp) => {
+      await updateUser(user).then(() => {
         setIsLoadingSend(false)
         navigate("/welcome", { replace: true });
       }).catch((err) => {
