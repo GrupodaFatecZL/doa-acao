@@ -125,62 +125,65 @@ export function FollowUpComponent() {
   return (
     <div className="w-screen content-center">
       <>
-        {listProduct && listProduct.length > 0 ? listProduct.filter(product => product?.chaveUnicaDoador === userDonor?.idUser)
-          .map((item) => {
-            return (
-              <div key={item.idProduct} className="flex gap-4 m-4 p-4 rounded-md border-solid border-2 border-zinc-300">
-                <img src={item.fotoProduto} className="w-1/2 md:w-32 lg:w-48" alt={item.produto} />
-                { item.status === true ?
-                  <div className="grid-cols-2 gap-1">
-                    <span className="text-zinc-900 font-regular text-sm whitespace-pre-wrap">
-                      Não há donatário até o momento.
-                    </span>
-                    <button
-                      className="bg-[#ee0707] mt-4 mb-4 min-h-[20px] p-2 rounded-md border-transparent flex-1 flex justify-center items-center text-sm text-zinc-100 font-medium hover:bg-[#ec6868]"
-                      onClick={() => deleteProduct(item?.idProduct)}
-                    >
-                      Remover anuncio
-                    </button>
-                  </div>
+        { listProduct && listProduct.length > 0 ? 
+          listProduct.filter(product => product?.chaveUnicaDoador === userDonor?.idUser)
+            .map((item) => {
+              return (
+                <div key={item.idProduct} className="flex gap-4 m-4 p-4 rounded-md border-solid border-2 border-zinc-300">
+                  <img src={item.fotoProduto} className="w-1/2 md:w-32 lg:w-48" alt={item.produto} />
+                  { item.status === true ?
+                    <div className="grid-cols-2 gap-1">
+                      <span className="text-zinc-900 font-regular text-sm whitespace-pre-wrap">
+                        Não há donatário até o momento.
+                      </span>
+                      <button
+                        className="bg-[#ee0707] mt-4 mb-4 min-h-[20px] p-2 rounded-md border-transparent flex-1 flex justify-center items-center text-sm text-zinc-100 font-medium hover:bg-[#ec6868]"
+                        onClick={() => deleteProduct(item?.idProduct)}
+                      >
+                        Remover anuncio
+                      </button>
+                    </div>
                   :
                   <>
-                    { donationInTransition && donationInTransition.map((x) => {
-                      if (x.idProduct === item.idProduct) {
-                        return (
-                          <div className="grid-cols-2 gap-1">
-                            <span className="text-zinc-900 font-regular text-sm whitespace-pre-wrap">
-                              {x.nome} demonstrou interesse.
-                              Deverá entrar em contato contigo até o dia {x.dataMaxRetirada}
-                            </span>
-                            <button
-                              className="bg-[#08ad3f] mt-4 mb-4 min-h-[20px] p-2 rounded-md border-transparent flex-1 flex justify-center items-center text-sm text-zinc-100 font-medium hover:bg-[#29d161]"
-                              onClick={() => confirmDonation(x.idDonation)}
-                            >
-                              Confirmar retirada
-                            </button>
-                            <button
-                              className="bg-[#e7f706] mt-4 mb-4 min-h-[20px] p-2 rounded-md border-transparent flex-1 flex justify-center items-center text-sm text-zinc-100 font-medium hover:bg-[#dae485]"
-                              onClick={() => undoInterest(x.idDonation, x.idProduct)}
-                            >
-                              Não haverá retirada
-                            </button>
-                          </div>
-                        )
-                      }
-                    })}
-
-                    { donationReceived && donationReceived.map((y) => {
-                      if (y.idProduct === item.idProduct) {
-                        return (
-                          <div className="grid-cols-2 gap-1">
-                            <span className="text-zinc-900 font-regular text-sm whitespace-pre-wrap">
-                              Parabéns, você realizou a doação para {y.nome} com sucesso!
-                              A entrega foi confirmada no dia {y.dataRetirada}
-                            </span>
-                          </div>
-                        )
-                      }
-                    })}
+                    { donationInTransition && donationInTransition.length > 0 ? 
+                      donationInTransition.map((x) => {
+                        if (x.idProduct === item.idProduct) {
+                          return (
+                            <div className="grid-cols-2 gap-1">
+                              <span className="text-zinc-900 font-regular text-sm whitespace-pre-wrap">
+                                {x.nome} demonstrou interesse.
+                                Deverá entrar em contato contigo até o dia {x.dataMaxRetirada}
+                              </span>
+                              <button
+                                className="bg-[#08ad3f] mt-4 mb-4 min-h-[20px] p-2 rounded-md border-transparent flex-1 flex justify-center items-center text-sm text-zinc-100 font-medium hover:bg-[#29d161]"
+                                onClick={() => confirmDonation(x.idDonation)}
+                              >
+                                Confirmar retirada
+                              </button>
+                              <button
+                                className="bg-[#e7f706] mt-4 mb-4 min-h-[20px] p-2 rounded-md border-transparent flex-1 flex justify-center items-center text-sm text-zinc-100 font-medium hover:bg-[#dae485]"
+                                onClick={() => undoInterest(x.idDonation, x.idProduct)}
+                              >
+                                Não haverá retirada
+                              </button>
+                            </div>
+                          )
+                        }
+                      }) 
+                      : 
+                      donationReceived && donationReceived.map((y) => {
+                        if (y.idProduct === item.idProduct) {
+                          return (
+                            <div className="grid-cols-2 gap-1">
+                              <span className="text-zinc-900 font-regular text-sm whitespace-pre-wrap">
+                                Parabéns, você realizou a doação para {y.nome} com sucesso!
+                                A entrega foi confirmada no dia {y.dataRetirada}
+                              </span>
+                            </div>
+                          )
+                        }
+                      })
+                    } 
                   </>
                 }
               </div>
